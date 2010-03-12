@@ -245,6 +245,13 @@ class locum_iii_2007 {
     $bib['subjects'] = '';
     if (count($subjects)) { $bib['subjects'] = $subjects; }
     
+    /*-------- University library items ----- */
+    
+    $journal_tags = array('852', '866');
+    
+    
+    /*-------- /University library items ----- */
+    
     unset($bib_info_marc);
     return $bib;
   }

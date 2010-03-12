@@ -33,11 +33,6 @@ class locum_server_hook extends locum {
    * @param boolean $quiet quietly harvest or not.  Default: TRUE
    */
   public function harvest_bibs($start, $end, $quiet = TRUE) {
-    if (is_callable(array(__CLASS__ . '_hook', __FUNCTION__))) {
-      eval('$hook = new ' . __CLASS__ . '_hook;');
-      return $hook->{__FUNCTION__}($start, $end, $quiet);
-    }
-    
     if ($start > $end) { return 0; }
 
     $num_children = $this->locum_config['harvest_config']['max_children'];
@@ -88,11 +83,6 @@ class locum_server_hook extends locum {
    * @return array Array of information about the bibs imported
    */
   public function import_bibs($start, $end) {
-    if (is_callable(array(__CLASS__ . '_hook', __FUNCTION__))) {
-      eval('$hook = new ' . __CLASS__ . '_hook;');
-      return $hook->{__FUNCTION__}($start, $end);
-    }
-    
     $db =& MDB2::connect($this->dsn);
 
     $process_report['skipped'] = 0;
@@ -160,13 +150,6 @@ class locum_client_hook extends locum {
    * @return array String-keyed result set
    */
   public function search($type, $term, $limit, $offset, $sort_opt = NULL, $format_array = array(), $location_array = array(), $facet_args = array(), $override_search_filter = FALSE, $limit_available = FALSE) {
-    
-    if (is_callable(array(__CLASS__ . '_hook', __FUNCTION__))) {
-      eval('$hook = new ' . __CLASS__ . '_hook;');
-      return $hook->{__FUNCTION__}($type, $term, $limit, $offset, $sort_opt, $format_array, $location_array, $facet_args, $override_search_filter, $limit_available);
-    }
-    
-    
     require_once($this->locum_config['sphinx_config']['api_path'] . '/sphinxapi.php');
     $db =& MDB2::connect($this->dsn);
     
