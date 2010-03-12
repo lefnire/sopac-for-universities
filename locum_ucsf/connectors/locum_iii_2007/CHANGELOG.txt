@@ -1,0 +1,562 @@
+------------------------------------------------------------------------
+r120 | jblyberg | 2010-02-23 18:09:37 -0500 (Tue, 23 Feb 2010) | 2 lines
+Changed paths:
+   M /iii/trunk/locum_iii_2007/config/locum_iii_2007.ini.sample
+   M /iii/trunk/locum_iii_2007/locum_iii_2007.php
+
+Added code to return branch information
+
+------------------------------------------------------------------------
+r119 | jblyberg | 2010-02-12 17:18:58 -0500 (Fri, 12 Feb 2010) | 2 lines
+Changed paths:
+   M /iii/trunk/locum_iii_2007/config/locum_iii_2007.ini.sample
+
+Added configuration parameter for branch assignment.
+
+------------------------------------------------------------------------
+r118 | jblyberg | 2010-02-05 17:37:30 -0500 (Fri, 05 Feb 2010) | 2 lines
+Changed paths:
+   D /iii/trunk/locum_iii_2007/config/locum_iii_2007.ini
+   A /iii/trunk/locum_iii_2007/config/locum_iii_2007.ini.sample (from /iii/trunk/locum_iii_2007/config/locum_iii_2007.ini:117)
+
+Renamed sample ini file so as to not overwrite existing config files.
+
+------------------------------------------------------------------------
+r117 | jblyberg | 2010-02-04 18:14:07 -0500 (Thu, 04 Feb 2010) | 3 lines
+Changed paths:
+   M /iii/trunk/locum_iii_2007/config/locum_iii_2007.ini
+   M /iii/trunk/locum_iii_2007/tools/iii_lang_parse.php
+
+Updated language parse script with updated comments and correct ini section header.
+Moved language resolution out of the connector ini.
+
+------------------------------------------------------------------------
+r116 | jblyberg | 2010-02-01 17:19:42 -0500 (Mon, 01 Feb 2010) | 2 lines
+Changed paths:
+   M /iii/trunk/locum_iii_2007/locum_iii_2007.php
+
+Harvester now returns download_link information.
+
+------------------------------------------------------------------------
+r115 | jblyberg | 2009-12-28 12:03:12 -0500 (Mon, 28 Dec 2009) | 3 lines
+Changed paths:
+   M /iii/trunk/locum_iii_2007/CHANGELOG.txt
+   A /iii/trunk/locum_iii_2007/misc/wwwoptions
+
+Added stock wwwoptions file to use as a "vanilla install"
+Updated Changelog
+
+------------------------------------------------------------------------
+r113 | jblyberg | 2009-10-12 10:23:37 -0400 (Mon, 12 Oct 2009) | 3 lines
+Changed paths:
+   M /iii/trunk/locum_iii_2007/locum_iii_2007.php
+   A /iii/trunk/locum_iii_2007/misc
+
+Small changes to comments.
+Added Misc directory for support files.
+
+------------------------------------------------------------------------
+r112 | jblyberg | 2009-10-09 16:47:58 -0400 (Fri, 09 Oct 2009) | 3 lines
+Changed paths:
+   M /iii/trunk/locum_iii_2007/iiitools_2007.php
+   M /iii/trunk/locum_iii_2007/locum_iii_2007.php
+
+Finished Holds update functionality.
+Finally fixed the mktime bug.
+
+------------------------------------------------------------------------
+r111 | jblyberg | 2009-10-09 11:06:30 -0400 (Fri, 09 Oct 2009) | 2 lines
+Changed paths:
+   M /iii/trunk/locum_iii_2007/iiitools_2007.php
+
+Made changes to reflect new data-set requirements for update_holds()
+
+------------------------------------------------------------------------
+r110 | jblyberg | 2009-10-07 15:43:42 -0400 (Wed, 07 Oct 2009) | 4 lines
+Changed paths:
+   M /iii/trunk/locum_iii_2007/iiitools_2007.php
+   M /iii/trunk/locum_iii_2007/locum_iii_2007.php
+
+Changed the way holds are modified
+Consolidated holds modification into one function
+Fixed some additional bugs with holds freezes
+
+------------------------------------------------------------------------
+r109 | jblyberg | 2009-10-07 07:47:59 -0400 (Wed, 07 Oct 2009) | 2 lines
+Changed paths:
+   M /iii/trunk/locum_iii_2007/iiitools_2007.php
+
+Re-structuring pickup-location data result array to make it non iii-specific up-stack.
+
+------------------------------------------------------------------------
+r108 | jblyberg | 2009-10-06 17:58:22 -0400 (Tue, 06 Oct 2009) | 3 lines
+Changed paths:
+   M /iii/trunk/locum_iii_2007/config/locum_iii_2007.ini
+   M /iii/trunk/locum_iii_2007/iiitools_2007.php
+   M /iii/trunk/locum_iii_2007/locum_iii_2007.php
+
+Moved ils_server specific config options into connector config.
+Added ability to configure both staging and live ports, and choose which to use.
+
+------------------------------------------------------------------------
+r107 | jblyberg | 2009-10-05 22:34:44 -0400 (Mon, 05 Oct 2009) | 2 lines
+Changed paths:
+   M /iii/trunk/locum_iii_2007/iiitools_2007.php
+   M /iii/trunk/locum_iii_2007/locum_iii_2007.php
+
+Fixed a reliability issue with hold freezes.
+
+------------------------------------------------------------------------
+r106 | jblyberg | 2009-10-05 16:41:07 -0400 (Mon, 05 Oct 2009) | 2 lines
+Changed paths:
+   M /iii/trunk/locum_iii_2007/locum_iii_2007.php
+
+Added get_tools() function to make III tools class instantiation easier.
+
+------------------------------------------------------------------------
+r105 | jblyberg | 2009-10-05 14:32:03 -0400 (Mon, 05 Oct 2009) | 2 lines
+Changed paths:
+   M /iii/trunk/locum_iii_2007/iiitools_2007.php
+
+code cleanup.
+
+------------------------------------------------------------------------
+r104 | jblyberg | 2009-10-02 17:31:22 -0400 (Fri, 02 Oct 2009) | 2 lines
+Changed paths:
+   M /iii/trunk/locum_iii_2007/config/locum_iii_2007.ini
+
+Slight change to connector ini file + added comment.
+
+------------------------------------------------------------------------
+r103 | jblyberg | 2009-10-02 16:53:08 -0400 (Fri, 02 Oct 2009) | 2 lines
+Changed paths:
+   M /iii/trunk/locum_iii_2007/iiitools_2007.php
+   M /iii/trunk/locum_iii_2007/locum_iii_2007.php
+   M /iii/trunk/locum_iii_2007/patronapi.php
+   M /iii/trunk/locum_iii_2007/tools/iii_lang_parse.php
+   M /iii/trunk/locum_iii_2007/tools/iii_loc_parse.php
+
+Changed whitespace standard to match Drupal coding standards.
+
+------------------------------------------------------------------------
+r102 | jblyberg | 2009-09-28 22:38:03 -0400 (Mon, 28 Sep 2009) | 3 lines
+Changed paths:
+   M /iii/trunk/locum_iii_2007/iiitools_2007.php
+   M /iii/trunk/locum_iii_2007/locum_iii_2007.php
+   M /iii/trunk/locum_iii_2007/patronapi.php
+
+Default age was not referenced properly.
+Code cleanup.
+
+------------------------------------------------------------------------
+r101 | jblyberg | 2009-09-28 17:49:43 -0400 (Mon, 28 Sep 2009) | 2 lines
+Changed paths:
+   M /iii/trunk/locum_iii_2007/locum_iii_2007.php
+
+Added III-specific comments about unicode support.
+
+------------------------------------------------------------------------
+r100 | jblyberg | 2009-09-28 00:12:09 -0400 (Mon, 28 Sep 2009) | 2 lines
+Changed paths:
+   M /iii/trunk/locum_iii_2007/locum_iii_2007.php
+
+fixed a small bug with suppression.
+
+------------------------------------------------------------------------
+r99 | jblyberg | 2009-09-25 18:11:18 -0400 (Fri, 25 Sep 2009) | 4 lines
+Changed paths:
+   A /iii/trunk/locum_iii_2007/config/locum_iii_2007.ini (from /iii/trunk/locum_iii_2007/config/locum_iii_config.ini:98)
+   D /iii/trunk/locum_iii_2007/config/locum_iii_config.ini
+   M /iii/trunk/locum_iii_2007/locum_iii_2007.php
+
+Completed item_status() functionality.
+Added conditionals to hook/override functions.
+Renamed ini file.
+
+------------------------------------------------------------------------
+r98 | jblyberg | 2009-09-24 18:04:48 -0400 (Thu, 24 Sep 2009) | 4 lines
+Changed paths:
+   A /iii/trunk/locum_iii_2007/config
+   A /iii/trunk/locum_iii_2007/config/locum_iii_config.ini
+   M /iii/trunk/locum_iii_2007/locum_iii_2007.php
+   A /iii/trunk/locum_iii_2007/tools/iii_lang_parse.php
+   M /iii/trunk/locum_iii_2007/tools/iii_loc_parse.php
+
+Much work on item level availability function.
+Added support for resolving language codes.
+Re-instated the config directory & moved locum.ini parameters into it.
+
+------------------------------------------------------------------------
+r97 | jblyberg | 2009-09-23 17:51:26 -0400 (Wed, 23 Sep 2009) | 4 lines
+Changed paths:
+   D /iii/trunk/locum_iii_2007/config
+   M /iii/trunk/locum_iii_2007/iiitools_2007.php
+   M /iii/trunk/locum_iii_2007/locum_iii_2007.php
+
+Merged Eby's UTF-8 support.
+Added suppression support.
+Extensive code clean-up.
+
+------------------------------------------------------------------------
+r96 | jblyberg | 2009-09-11 18:04:47 -0400 (Fri, 11 Sep 2009) | 2 lines
+Changed paths:
+   A /iii/trunk/locum_iii_2007/config
+   A /iii/trunk/locum_iii_2007/config/locum_iii_config.ini
+   M /iii/trunk/locum_iii_2007/locum_iii_2007.php
+   A /iii/trunk/locum_iii_2007/tools
+   A /iii/trunk/locum_iii_2007/tools/iii_loc_parse.php
+
+Begin multi-branch/item level integration.
+
+------------------------------------------------------------------------
+r95 | jblyberg | 2009-08-19 15:26:59 -0400 (Wed, 19 Aug 2009) | 2 lines
+Changed paths:
+   M /iii/trunk/locum_iii_2007/locum_iii_2007.php
+
+Fixed a fairly critical bug that was causing unweeded bibs to be weeded.
+
+------------------------------------------------------------------------
+r94 | jblyberg | 2009-07-30 18:02:19 -0400 (Thu, 30 Jul 2009) | 3 lines
+Changed paths:
+   M /iii/trunk/locum_iii_2007/iiitools_2007.php
+   M /iii/trunk/locum_iii_2007/locum_iii_2007.php
+
+Fixed a small mktime bug in iiitools.
+Slight syntax change in locim_iii_2007.
+
+------------------------------------------------------------------------
+r93 | smaskit | 2009-07-29 15:30:50 -0400 (Wed, 29 Jul 2009) | 1 line
+Changed paths:
+   M /iii/trunk/locum_iii_2007/CHANGELOG.txt
+   M /iii/trunk/locum_iii_2007/iiitools_2007.php
+   M /iii/trunk/locum_iii_2007/locum_iii_2007.php
+
+Finish adding code to enable checkout history; add code to enable freezing holds
+------------------------------------------------------------------------
+r92 | smaskit | 2009-07-29 15:06:05 -0400 (Wed, 29 Jul 2009) | 1 line
+Changed paths:
+   M /iii/trunk/locum_iii_2007/CHANGELOG.txt
+   M /iii/trunk/locum_iii_2007/iiitools_2007.php
+
+Added the functions to enable checkout history
+------------------------------------------------------------------------
+r91 | smaskit | 2009-07-22 18:00:14 -0400 (Wed, 22 Jul 2009) | 1 line
+Changed paths:
+   M /iii/trunk/locum_iii_2007/CHANGELOG.txt
+   M /iii/trunk/locum_iii_2007/locum_iii_2007.php
+
+modify item_status() so holdings info based on url containing all items
+------------------------------------------------------------------------
+r88 | jblyberg | 2009-07-02 23:57:48 -0400 (Thu, 02 Jul 2009) | 2 lines
+Changed paths:
+   M /iii/trunk/locum_iii_2007/iiitools_2007.php
+   M /iii/trunk/locum_iii_2007/locum_iii_2007.php
+
+Fixed a regex issue that was causing holds to not be reported in item_status.
+
+------------------------------------------------------------------------
+r85 | jblyberg | 2009-06-05 13:57:22 -0400 (Fri, 05 Jun 2009) | 2 lines
+Changed paths:
+   M /iii/trunk/locum_iii_2007/iiitools_2007.php
+
+Fixes a bug where cardnumber is not used for logged-in session IDs.
+
+------------------------------------------------------------------------
+r83 | jblyberg | 2009-04-14 17:47:52 -0400 (Tue, 14 Apr 2009) | 3 lines
+Changed paths:
+   M /iii/trunk/locum_iii_2007/CHANGELOG.txt
+   M /iii/trunk/locum_iii_2007/iiitools_2007.php
+
+Updated the changelog.
+Fixed the user agent string.
+
+------------------------------------------------------------------------
+r82 | jblyberg | 2009-04-10 17:31:42 -0400 (Fri, 10 Apr 2009) | 2 lines
+Changed paths:
+   M /iii/trunk/locum_iii_2007/iiitools_2007.php
+   M /iii/trunk/locum_iii_2007/locum_iii_2007.php
+
+Fixed fine payment and session integration for III v2007.
+
+------------------------------------------------------------------------
+r81 | jblyberg | 2009-04-10 09:27:19 -0400 (Fri, 10 Apr 2009) | 2 lines
+Changed paths:
+   M /iii/trunk/locum_iii_2007/iiitools_2007.php
+   M /iii/trunk/locum_iii_2007/locum_iii_2007.php
+
+III workaround for 2007.
+
+------------------------------------------------------------------------
+r80 | jblyberg | 2009-04-09 18:05:24 -0400 (Thu, 09 Apr 2009) | 2 lines
+Changed paths:
+   M /iii/trunk/locum_iii_2007/iiitools_2007.php
+   M /iii/trunk/locum_iii_2007/locum_iii_2007.php
+
+Working on getting the curl routines to work with 2007.
+
+------------------------------------------------------------------------
+r79 | jblyberg | 2009-04-09 13:42:15 -0400 (Thu, 09 Apr 2009) | 2 lines
+Changed paths:
+   D /iii/trunk/locum_iii_2007/iiitools_2006.php
+   A /iii/trunk/locum_iii_2007/iiitools_2007.php (from /iii/trunk/locum_iii_2007/iiitools_2006.php:78)
+   D /iii/trunk/locum_iii_2007/locum_iii_2006.php
+   A /iii/trunk/locum_iii_2007/locum_iii_2007.php (from /iii/trunk/locum_iii_2007/locum_iii_2006.php:78)
+
+Renamed files for new III version number.
+
+------------------------------------------------------------------------
+r78 | jblyberg | 2009-04-09 13:31:12 -0400 (Thu, 09 Apr 2009) | 2 lines
+Changed paths:
+   A /iii/trunk/locum_iii_2007 (from /iii/trunk/locum_iii_2006:77)
+
+Forking 2006 connector for 2007.
+
+------------------------------------------------------------------------
+r77 | smaskit | 2009-03-26 07:11:10 -0400 (Thu, 26 Mar 2009) | 1 line
+Changed paths:
+   A /iii/trunk/locum_iii_2006/CHANGELOG.txt
+   M /iii/trunk/locum_iii_2006/iiitools_2006.php
+   M /iii/trunk/locum_iii_2006/locum_iii_2006.php
+
+minor change to support multi-branch holds; and minor cleanup
+------------------------------------------------------------------------
+r75 | jblyberg | 2009-03-17 22:05:18 -0400 (Tue, 17 Mar 2009) | 1 line
+Changed paths:
+   D /iii/locum_iii_2006
+   A /iii/tags
+   A /iii/trunk
+   A /iii/trunk/locum_iii_2006 (from /iii/locum_iii_2006:74)
+
+Created trunk and tag directories for the III connector
+------------------------------------------------------------------------
+r73 | jblyberg | 2009-03-17 15:23:26 -0400 (Tue, 17 Mar 2009) | 2 lines
+Changed paths:
+   M /iii/locum_iii_2006/patronapi.php
+
+Testing a commit.
+
+------------------------------------------------------------------------
+r72 | jblyberg | 2009-03-16 16:33:19 -0400 (Mon, 16 Mar 2009) | 2 lines
+Changed paths:
+   D /config
+   D /connectors
+   A /iii/locum_iii_2006 (from /connectors/locum_iii_2006:71)
+   D /locum-client.php
+   D /locum-server.php
+   D /locum.php
+   D /sphinx
+   D /sql
+   D /tools
+
+Removed a bunch of stuff
+
+------------------------------------------------------------------------
+r70 | jblyberg | 2009-03-16 09:57:19 -0400 (Mon, 16 Mar 2009) | 2 lines
+Changed paths:
+   M /connectors/locum_iii_2006/locum_iii_2006.php
+
+added total value to item availability so that we can see, for example, "3 of 7 copies available"
+
+------------------------------------------------------------------------
+r68 | jblyberg | 2008-09-15 15:29:02 -0400 (Mon, 15 Sep 2008) | 2 lines
+Changed paths:
+   M /connectors/locum_iii_2006/locum_iii_2006.php
+
+Small syntax problem.
+
+------------------------------------------------------------------------
+r55 | jblyberg | 2008-08-19 18:03:58 -0400 (Tue, 19 Aug 2008) | 2 lines
+Changed paths:
+   M /config/locum.ini
+   M /connectors/locum_iii_2006/locum_iii_2006.php
+
+Slight clean-up.
+
+------------------------------------------------------------------------
+r48 | jblyberg | 2008-08-16 12:25:56 -0400 (Sat, 16 Aug 2008) | 2 lines
+Changed paths:
+   M /connectors/locum_iii_2006/iiitools_2006.php
+
+Oops!
+
+------------------------------------------------------------------------
+r47 | jblyberg | 2008-08-15 23:00:28 -0400 (Fri, 15 Aug 2008) | 2 lines
+Changed paths:
+   M /connectors/locum_iii_2006/iiitools_2006.php
+   M /connectors/locum_iii_2006/locum_iii_2006.php
+   M /locum-client.php
+
+Additional work on fine payments.
+
+------------------------------------------------------------------------
+r43 | jblyberg | 2008-08-13 20:24:00 -0400 (Wed, 13 Aug 2008) | 2 lines
+Changed paths:
+   M /config/locum.ini
+   M /connectors/locum_iii_2006/iiitools_2006.php
+   M /connectors/locum_iii_2006/locum_iii_2006.php
+   M /locum-client.php
+   M /sphinx/sphinx.conf
+
+Fixed a majot bug with the use of ordinals as a key for the filtering logic.
+
+------------------------------------------------------------------------
+r40 | jblyberg | 2008-08-11 20:54:19 -0400 (Mon, 11 Aug 2008) | 3 lines
+Changed paths:
+   M /connectors/locum_iii_2006/iiitools_2006.php
+   M /connectors/locum_iii_2006/locum_iii_2006.php
+   M /locum-client.php
+   M /tools/harvest.php
+
+Began fines integration.
+Updated harvester to be much faster and more efficient.
+
+------------------------------------------------------------------------
+r39 | jblyberg | 2008-08-11 09:55:56 -0400 (Mon, 11 Aug 2008) | 2 lines
+Changed paths:
+   M /connectors/locum_iii_2006/locum_iii_2006.php
+   M /locum.php
+   A /tools/harvest.php
+   A /tools/repair.php
+
+Added tools for repairing and harvesting record sets
+
+------------------------------------------------------------------------
+r38 | jblyberg | 2008-08-10 12:59:07 -0400 (Sun, 10 Aug 2008) | 2 lines
+Changed paths:
+   M /connectors/locum_iii_2006/iiitools_2006.php
+   M /connectors/locum_iii_2006/locum_iii_2006.php
+   M /connectors/locum_iii_2006/patronapi.php
+   M /locum-client.php
+   M /locum-server.php
+   M /locum.php
+   M /sphinx/sphinx.conf
+
+Added filters and sorting
+
+------------------------------------------------------------------------
+r34 | jblyberg | 2008-08-07 19:17:58 -0400 (Thu, 07 Aug 2008) | 2 lines
+Changed paths:
+   M /connectors/locum_iii_2006/locum_iii_2006.php
+   M /locum-client.php
+
+Fixed availability
+
+------------------------------------------------------------------------
+r33 | jblyberg | 2008-08-07 18:33:55 -0400 (Thu, 07 Aug 2008) | 3 lines
+Changed paths:
+   M /connectors/locum_iii_2006/iiitools_2006.php
+   M /connectors/locum_iii_2006/locum_iii_2006.php
+   M /locum-client.php
+   M /tools/maint.php
+
+Finished request routines.
+Still need to do pickup locations, however.
+
+------------------------------------------------------------------------
+r32 | jblyberg | 2008-08-06 16:53:40 -0400 (Wed, 06 Aug 2008) | 2 lines
+Changed paths:
+   M /connectors/locum_iii_2006/iiitools_2006.php
+
+Discovered an annoying reality about the nature of holds in III
+
+------------------------------------------------------------------------
+r31 | jblyberg | 2008-08-05 18:19:55 -0400 (Tue, 05 Aug 2008) | 3 lines
+Changed paths:
+   M /connectors/locum_iii_2006/iiitools_2006.php
+   M /connectors/locum_iii_2006/locum_iii_2006.php
+   M /locum-client.php
+
+Requests working
+Hold cancellations working
+
+------------------------------------------------------------------------
+r30 | jblyberg | 2008-07-30 12:44:51 -0400 (Wed, 30 Jul 2008) | 3 lines
+Changed paths:
+   M /connectors/locum_iii_2006/iiitools_2006.php
+   M /connectors/locum_iii_2006/locum_iii_2006.php
+
+Renewals Done!
+Changed the dataset structure for the renewals request array.  Flipped varname with inum.
+
+------------------------------------------------------------------------
+r29 | jblyberg | 2008-07-29 18:54:05 -0400 (Tue, 29 Jul 2008) | 3 lines
+Changed paths:
+   M /connectors/locum_iii_2006/iiitools_2006.php
+   M /connectors/locum_iii_2006/locum_iii_2006.php
+   M /locum-client.php
+
+Added support for renewals and hold cancelling
+
+
+------------------------------------------------------------------------
+r28 | jblyberg | 2008-07-20 23:36:27 -0400 (Sun, 20 Jul 2008) | 2 lines
+Changed paths:
+   M /connectors/locum_iii_2006/locum_iii_2006.php
+
+End of day commit
+
+------------------------------------------------------------------------
+r27 | jblyberg | 2008-07-18 09:42:59 -0400 (Fri, 18 Jul 2008) | 4 lines
+Changed paths:
+   M /connectors/locum_iii_2006/iiitools_2006.php
+   M /connectors/locum_iii_2006/locum_iii_2006.php
+   M /locum-client.php
+
+Modifications to item retrieval
+Added upward progression of item and hold status
+Locum now presents item and hold status all the way up through the stack
+
+------------------------------------------------------------------------
+r26 | jblyberg | 2008-07-13 00:03:39 -0400 (Sun, 13 Jul 2008) | 2 lines
+Changed paths:
+   M /connectors/locum_iii_2006/iiitools_2006.php
+   M /connectors/locum_iii_2006/locum_iii_2006.php
+   M /connectors/locum_iii_2006/patronapi.php
+   M /locum-client.php
+   M /locum.php
+
+Added transactional functionality and presented it up to Locum.
+
+------------------------------------------------------------------------
+r25 | jblyberg | 2008-07-06 11:44:56 -0400 (Sun, 06 Jul 2008) | 2 lines
+Changed paths:
+   M /connectors/locum_iii_2006/iiitools_2006.php
+   M /connectors/locum_iii_2006/locum_iii_2006.php
+   M /connectors/locum_iii_2006/patronapi.php
+   M /locum-client.php
+   M /locum-server.php
+   M /locum.php
+   M /sql/locum_init.sql
+
+Updated documentation
+
+------------------------------------------------------------------------
+r23 | jblyberg | 2008-07-05 13:35:15 -0400 (Sat, 05 Jul 2008) | 2 lines
+Changed paths:
+   M /connectors/locum_iii_2006/locum_iii_2006.php
+   M /locum-client.php
+   M /locum-server.php
+   M /locum.php
+
+Added boucoup documentation in phpdocumentor format
+
+------------------------------------------------------------------------
+r22 | jblyberg | 2008-07-04 12:13:56 -0400 (Fri, 04 Jul 2008) | 3 lines
+Changed paths:
+   A /connectors/locum_iii_2006/iiitools_2006.php
+   A /connectors/locum_iii_2006/patronapi.php
+
+Added patronAPI code
+Added iii_tools code
+
+------------------------------------------------------------------------
+r21 | jblyberg | 2008-07-04 12:12:06 -0400 (Fri, 04 Jul 2008) | 2 lines
+Changed paths:
+   A /connectors/locum_iii_2006
+   A /connectors/locum_iii_2006/locum_iii_2006.php (from /connectors/locum_iii_2006.php:19)
+   D /connectors/locum_iii_2006.php
+   M /locum.php
+
+Began work on interactions
+
+------------------------------------------------------------------------

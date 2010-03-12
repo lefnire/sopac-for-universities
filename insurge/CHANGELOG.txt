@@ -1,0 +1,86 @@
+------------------------------------------------------------------------
+r33 | jblyberg | 2010-02-26 16:53:09 -0500 (Fri, 26 Feb 2010) | 2 lines
+Changed paths:
+   M /trunk/insurge-client.php
+   M /trunk/sql/scas_insurge.sql
+   M /trunk/tools/upgrades/1.0/upgrade.sql
+
+Begin implementation of checkout history storage and facility.
+
+------------------------------------------------------------------------
+r32 | jblyberg | 2010-02-05 17:34:54 -0500 (Fri, 05 Feb 2010) | 2 lines
+Changed paths:
+   D /trunk/config/insurge.ini
+   A /trunk/config/insurge.ini.sample (from /trunk/config/insurge.ini:29)
+
+Renamed sample ini file so as to not overwrite existing config files.
+
+------------------------------------------------------------------------
+r31 | jblyberg | 2010-02-04 18:15:05 -0500 (Thu, 04 Feb 2010) | 2 lines
+Changed paths:
+   M /trunk/sql/scas_insurge.sql
+   A /trunk/tools/upgrades
+   A /trunk/tools/upgrades/1.0
+   A /trunk/tools/upgrades/1.0/upgrade.sql
+
+Added upgrade SQL scripts.
+
+------------------------------------------------------------------------
+r30 | jblyberg | 2010-02-02 18:08:24 -0500 (Tue, 02 Feb 2010) | 2 lines
+Changed paths:
+   M /trunk/insurge-server.php
+
+Added TODO from Eby to consolidate insurge index routine.
+
+------------------------------------------------------------------------
+r29 | jblyberg | 2009-10-02 16:52:57 -0400 (Fri, 02 Oct 2009) | 2 lines
+Changed paths:
+   M /trunk/insurge-client.php
+   M /trunk/insurge-server.php
+   M /trunk/insurge.php
+
+Changed whitespace standard to match Drupal coding standards.
+
+------------------------------------------------------------------------
+r28 | jblyberg | 2009-07-30 18:03:10 -0400 (Thu, 30 Jul 2009) | 2 lines
+Changed paths:
+   M /trunk/tools/update-index.php
+
+Removed extraneous init scrip variable declaration.
+
+------------------------------------------------------------------------
+r27 | jblyberg | 2009-06-28 23:15:26 -0400 (Sun, 28 Jun 2009) | 2 lines
+Changed paths:
+   M /trunk/insurge-client.php
+   M /trunk/insurge-server.php
+   M /trunk/insurge.php
+
+Code clean-up
+
+------------------------------------------------------------------------
+r26 | smaskit | 2009-04-14 14:57:56 -0400 (Tue, 14 Apr 2009) | 1 line
+Changed paths:
+   A /trunk/CHANGELOG.txt
+   M /trunk/insurge.php
+
+modified __construct so it calls insurge_constructor_override() if it exists
+------------------------------------------------------------------------
+r24 | jblyberg | 2009-03-17 22:01:56 -0400 (Tue, 17 Mar 2009) | 1 line
+Changed paths:
+   D /config
+   D /insurge-client.php
+   D /insurge-server.php
+   D /insurge.php
+   D /sql
+   A /tags
+   D /tools
+   A /trunk
+   A /trunk/config (from /config:23)
+   A /trunk/insurge-client.php (from /insurge-client.php:23)
+   A /trunk/insurge-server.php (from /insurge-server.php:23)
+   A /trunk/insurge.php (from /insurge.php:23)
+   A /trunk/sql (from /sql:23)
+   A /trunk/tools (from /tools:23)
+
+Moved base directory to trunk directory
+------------------------------------------------------------------------

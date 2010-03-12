@@ -1,0 +1,313 @@
+PROXYDNS=youriiiserver.yourlibrary.org
+BOOKINGS=no|true|true
+#<!-- Version 2003.08.15 -->#
+
+ICON_RECORDLINK=<div class="bibRecordLink"><a href="%s">URL for this record</a></div>
+UPDATECIRC=true
+# REQFILLTIME=15|<br />Current estimated availability: approximately %d days##DDDDACA|<br />Request available in approximately %d days|<br />This material may be immediately available
+
+SSLPORT=2082:446
+RSS_MIN_TTL=20
+
+# Ecommerce
+CC_APPROVED=Your payment has been approved.
+CC_DECLINED=Sorry. Your payment has been declined. Please confirm your information is entered correctly or pay at the library.
+CC_EMAIL_RECEIPT=Receipt for payment to Your Library|circ@yourlibrary.org|circ@yourlibrary.org
+ICON_OK=<img src="/screens/ok.gif" class="button" border="0" alt="OK">
+ICON_PAY=<img src="/screens/pay.gif" class="button" border="0" alt="Pay Online">
+ICON_PAY_CLEAR_ALL=<img src="/screens/pay_clear_all.gif" class="button" border="0" alt="Clear All">
+ICON_PAY_RECALC=<img src="/screens/pay_recalc.gif" class="button" border="0" alt="Recalculate Total">
+ICON_PAY_SELECT_ALL=<img src="/screens/pay_select_all.gif" class="button" border="0" alt="Select All">
+ICON_PRINT=<img src="/screens/print.gif" class="button" border="0" alt="Print">
+MINDONATE=1000|Donations must be at least $10.00 to cover processing costs. Thank you.
+PAYAMTS=0|Please visit the library to pay this amount|0  
+
+
+# Display and Logging Options
+
+TOPLOGO=@screens/toplogo.html
+BOTLOGO=@screens/botlogo.html
+BODYPARAM=bgcolor="#FFFFFF"
+STARTOVER=/search
+STATGROUP=login
+STYLESHEET=/screens/styles.css
+TIMEOUT=300;URL=/
+XSTARTOVER=/
+
+# OPAC Display and Behavior Options
+
+# BIBIMAGE=http://www.TheContentServer.com/bin/cntsvr.dll?GetImage&SysID=PUTACCOUNTHERE&CustID=PUTACCOUNTHERE&ISBN=%s&Type=S&Return=0|I|http://www.TheContentServer.com/bin/cntsvr.dll?GetImage&SysID=PUTACCOUNTHERE&CustID=PUTACCOUNTHERE&ISBN=%s&Type=L&Return=1
+
+BRIEF=A
+BROWSE50=true
+BROWSE_t=245/abvh|240/abc|970/t/|abv
+BROWSE_HEADERS=Save|Format
+DISPLAY_245=atd
+DISPLAY_856=z
+DROP_DOWN=Xatdc
+EXTENDED=CT
+FRAMEURL=15
+HOLDINGS_POS=atperR
+# HOTLINK=i^020,c^09,n^505
+IBROWSE_MAX=10000
+ILL_HOME=/screens/ill.html
+INDEX_EXT=coi
+LINK856TEXT=Connect to
+MARC=no 
+MEDIA=2
+NOSEARCH=nubf
+OFFER_HISTORY=true
+# RECORDFRAME=27%,48%,25%
+# RECORDFRAME_STAFF=27%,48%,25%
+SHOWOREC=10
+SORT_BROWSE=t:Title|a:Author|c:Year|r:Reverse Year|n:Call Number|m:Material Type
+SORT_ITEMS=true
+# SORT_MEDIA=@amcdji
+TABLEPARAM_BIB=width="100%" border="0"|width="100%" border="0"
+TABLEPARAM_BIB_DETAIL=border="0" width="100%" cellspacing="1"
+TABLEPARAM_BRIEFCIT=true|width="100%" border="0" cellpadding="2"
+TABLEPARAM_BROWSE=width="100%" border="0"|align="center"|width="100%" cellpadding="2" cellspacing="0" border="0"|cellpadding="2" cellspacing="0" border="0"
+WEBPUBDEF=true
+
+# Checkin Card Display Options
+CHECKIN_BGCOLOR=ARRIVED=#FFFFFF|EXPECTED=#FFFFFF|TO BIND/BOUND=#FFFFFF|LATE=#FFFFFF|OTHER=#FFFFFF
+CHECKIN_FONTCOLOR=ARRIVED=GREEN|EXPECTED=BLACK|TO BIND/BOUND=RED|LATE=BLACK|OTHER=BLACK
+DISPLAY_CHECKIN_856=z
+SUPPRESS_CARD=UI
+
+# Advanced Search Options
+
+AVS_MODIFY_TAG=X
+AVS_TAG=XYZ
+KEYWORD_COLOR=Y|all|red
+
+# Featured List Options
+FEATURED_LIST=52,53,54,51,55|Featured Lists|List Name|Number of Items
+
+# Request Options
+
+BIBREQUEST=T
+REQUEST=Hold this item|bib|home
+REQUEST_MULTI=Request All Items on This List|bib|home
+
+
+# Materials Booking Options
+
+BOOK_CAL_AVAIL=green
+BOOK_CAL_BKGRD=white
+BOOK_CAL_CLOSE=red
+BOOK_CAL_UNAVAIL=black
+CANCEL_BOOKINGS=true
+
+# Patron Record Display and Behavior Options
+FRAMEURL_PAT=50
+MODIFY_PFLDS=atz
+NEWPIN_MSG=Please enter a Personal Identification Number (PIN)
+PATRON_FIELDS=n/a|a/a|t/t|z
+# PATRON_MSG=z|Message from the library
+PATRON_NOTICES=pz
+PSTARTOVER=/
+TABLEPARAM_PATDISP=border="0"|border="0"|border="0"
+TABLEPARAM_PATFUNC=border="0"|border="0"|border="0"
+
+
+# My Millennium Options
+LOGGEDIN_MSG=<strong>You are logged into %s</strong>
+STAFFLOGGEDIN_MSG=You are logged into staff mode at %s as %s
+MY_WEBPAC=false|true
+PREFTEXT=Save this search
+PREF_SEARCHES=40|Y
+STAFF=2,4
+NO_REVERIFY=req,acq,wam,mmf
+
+
+# Export Options
+
+BRIEF_EXPORT=a|t|p|c
+EMAILOP=Your Library search results|exporter|
+ERESERVE=[0123456789]
+EXPORT_SELECT_TABLE=Sendto:browser|Format:full,brief,email,local
+
+# Graphic Buttons and Other Images Options
+
+BUT_ANOTHER=/screens/another.gif
+BUT_BIBEXPORT=/screens/addtocart.gif
+BUT_BOOKING=/screens/booking.gif
+BUT_BRIEF=/screens/brief.gif
+BUT_CARDFORM_BOX=/screens/cardform_box.gif
+BUT_CARDFORM_LIN=/screens/cardform_lin.gif
+BUT_CLEAR_MARKED=/screens/clearcart.gif
+BUT_CLOSEFRAME=/screens/closeframe.gif
+BUT_CLOSEWINDOW=/screens/closewindow.gif
+BUT_CLOSEWN=/screens/closewn.gif
+BUT_EMAIL=/screens/email.gif
+BUT_ENCYCPD=/screens/encycpd.gif
+BUT_EXPORT_MULTI=/screens/export_multi.gif
+BUT_EXPORT_VIEW_SAVES=/screens/export_view_saves.gif
+BUT_EXTENDED=/screens/extended.gif
+BUT_FULL_TEXT=/screens/full_text.gif
+BUT_PAT_GETPSAVEDRECS=/screens/pat_getpsavedrecs.gif
+BUT_ILL_CANCEL=/screens/ill_cancel.gif
+BUT_ILL_FORM=/screens/ill_form.gif
+BUT_ILL_HOME=/screens/ill_home.gif
+BUT_LIMAVAIL=/screens/limavail.gif
+BUT_LIMIT=/screens/limit.gif
+BUT_LOGOUT=/screens/logout.gif
+BUT_MARC_DISPLAY=/screens/marc_display.gif
+BUT_MODIFY=/screens/modify.gif
+BUT_NEWSRCH=/screens/newsrch.gif
+BUT_NEXTPAGE=/screens/nextpage.gif
+BUT_NEXTREC=/screens/nextrec.gif
+# BUT_PAT_BOOKING=/screens/pat_booking.gif
+BUT_PAT_CANCELALL=/screens/pat_cancelall.gif
+BUT_PAT_CANCELMARK=/screens/pat_cancelmark.gif
+# BUT_PAT_CHKOUTS=/screens/pat_chkouts.gif
+# BUT_PAT_FINES=/screens/pat_fines.gif
+# BUT_PAT_HOLDS=/screens/pat_holds.gif
+# BUT_PAT_ILL=/screens/pat_ill.gif
+BUT_PAT_INFO=/screens/pat_info.gif
+BUT_PAT_MSGS=/screens/pat_msgs.gif
+BUT_PAT_PIN=/screens/pat_pin.gif
+BUT_PAT_PSEARCH_REMOVE=/screens/pat_psearch_remove.gif
+BUT_PAT_PSEARCH_UPDATE=/screens/pat_psearch_update.gif
+BUT_PAT_RENEWALL=/screens/pat_renewall.gif
+# BUT_PAT_RENEWMARK/screens/pat_renewmark.gif=
+BUT_PAT_SEARCH=/screens/pat_search.gif
+BUT_PAT_SORTBYCHKOUT=/screens/pat_sortbychkout.gif
+BUT_PAT_SORTBYDUE=/screens/pat_sortbydue.gif
+BUT_PLOGOUT=/screens/ret2prec.gif
+BUT_PREVPAGE=/screens/prevpage.gif
+BUT_PREVREC=/screens/prevrec.gif
+BUT_PREVSCRN=/screens/prevscrn.gif
+BUT_PSTARTOVER=/screens/startover.gif
+BUT_PUBLIC=/screens/public.gif
+BUT_REGULAR_DISPLAY=/screens/rtrntb.gif
+BUT_REQUEST=/screens/request.gif
+BUT_REQUEST_ALL=/screens/request_all.gif
+BUT_REQUEST_MULTI=/screens/request_multi.gif
+BUT_REQUEST_RESET=/screens/request_reset.gif
+BUT_REQUEST_SELECTED=/screens/request_selected.gif
+# BUT_RESOURCELINK=/screens/resourcelink_small.gif
+BUT_RESOURCELINK=/screens/moreinfo.gif
+BUT_RET2CAT=/screens/ret2cat.gif
+BUT_RET2CRS=/screens/ret2crs.gif
+BUT_RET2FEAT=/screens/ret2feat.gif
+BUT_RET2PREC=/screens/ret2prec.gif
+BUT_RETHOME=/screens/rethome.gif
+BUT_RTRNTB=/screens/rtrntb.gif 
+BUT_SHOWSIM=/screens/showsim.gif
+BUT_STAFF=/screens/staff.gif
+BUT_STARTOVER=/screens/startover.gif
+BUT_UNLIMAVAIL=/screens/unlimavail.gif
+BUT_VIEW_SAVES=/screens/viewcart.gif
+BUT_WORDSRCH=/screens/wordsrch.gif
+BUT_Z39_ANOTHER=/screens/z39_another.gif
+BUT_Z39_REQUEST=/screens/request.gif
+BUT_Z39SEARCH=/screens/z39search.gif
+
+ICON_856LINK=Electronic Resource
+ICON_962LINK=<img src="/screens/media_computer.gif" alt="Digital media" border="0" />Digital Media 
+ICON_BOOKCART=<img src="/screens/addtocart.gif" alt="Add to List" border="0" />
+ICON_BOOKCART_SAVED=<img src="/screens/bookcartsaved.gif" alt="Remove from List" border="0" />
+ICON_FULLRECORD=See FULL RECORD for details on availability
+
+
+ICON_LOCATEINRESULTS=<input type="image" name="jumpto" src="/screens/locateinresults.gif" alt="Locate in results" border="0" width="120" height="20" />
+ICON_PAGING_CAPTION=Result Page&nbsp;
+ICON_PAGING_PREV=Prev
+ICON_PAGING_NEXT=Next
+ICON_REL_GROUP_1=<img src="/screens/relevance5.gif" alt="">&nbsp;Most relevant titles&nbsp;
+ICON_REL_GROUP_2=<img src="/screens/relevance4.gif" alt="">&nbsp;Highly relevant titles&nbsp;
+ICON_REL_GROUP_3=<img src="/screens/relevance3.gif" alt="">&nbsp;Very relevant titles&nbsp;
+ICON_REL_GROUP_4=<img src="/screens/relevance2.gif" alt="">&nbsp;Relevant titles&nbsp;
+ICON_REL_GROUP_5=<img src="/screens/relevance1.gif" alt="">&nbsp;Other relevant titles&nbsp;
+ICON_REQUEST=<img src="/screens/request.gif" alt="Request this title" border="0" />
+ICON_SAVEALLPAGE=<input type="image" name="save_all_page" src="/screens/saveallpage.gif" alt="Save all on page" border="0" width="120" height="20" />
+ICON_SAVEMARKED=<input type="image" name="save_marked" src="/screens/savemarked.gif" alt="Save marked records" border="0" width="120" height="20" />
+
+IMAGE_AVS1=/screens/avsstar1.gif
+IMAGE_AVS2=/screens/avsstar2.gif
+IMAGE_AVS3=/screens/avsstar3.gif
+IMAGE_AVS4=/screens/avsstar4.gif
+IMAGE_AVS5=/screens/avsstar5.gif
+
+IMAGE_MATTYPE1=/screens/f_book.gif
+IMAGE_MATTYPE4=/screens/f_video.gif
+IMAGE_MATTYPE5=/screens/f_bot.gif
+IMAGE_MATTYPEd=/screens/f_dvd.gif
+IMAGE_MATTYPEe=/screens/f_ebook.gif
+IMAGE_MATTYPEb=/screens/f_bocd.gif
+IMAGE_MATTYPE9=/screens/f_cdrom.gif
+IMAGE_MATTYPEw=/screens/f_website.gif
+IMAGE_MATTYPE6=/screens/f_musiccd.gif
+IMAGE_MATTYPE3=/screens/f_news.gif
+IMAGE_MATTYPEn=/screens/f_news.gif
+IMAGE_MATTYPEt=/screens/media_book.gif
+IMAGE_MATTYPEy=/screens/media_ebook.gif
+IMAGE_MATTYPE@=/screens/media_ebook.gif
+IMAGE_MATTYPEX=/screens/f_eaudiobook.gif
+IMAGE_MATTYPEu=/screens/f_usb.gif
+LOC_rack=/screens/rack.html
+
+
+LOC_exp=/screens/exp.html
+
+SUPPRESS_OPTION=SHOWSIM
+RESET_SCOPE=true
+
+
+# Other Resources Options
+# EBADDRESS=http://search.britannica.com/search?query=%s
+RESLINK=bibtop
+RESOURCETABLE=valign="top" rowspan="2"|cellpadding="0" cellspacing="0" border="0"|10
+# WEBADDRESS=http://www.amazon.com/exec/obidos/search-handle-url/index=books&field-keywords=%s&bq=1/|I| http://www.amazon.com/exec/obidos/ASIN/%s|<img src="/screens/resourcelink.gif" border="0">|REVIEW|20
+# BIBIMAGE=http://syndetics.com/index.aspx?isbn=%s/SC.GIF&client=yoursyndid&type=hw7|I|http://syndetics.com/index.aspx?isbn=%s/LC.JPG&client=yoursyndid&type=hw7
+|I|http://syndetics.com/index.aspx?isbn=%s/LC.JPG&client=yoursyndid&type=hw7
+# WEBADDRESS=|I|http://syndetics.com/index.aspx?isbn=%s/index.html&client=yoursyndid&type=rw12&pop
+up=yes||<IMG SRC="/screens/moreinfo.gif" border="0">
+Z39BROADCAST=Z39.50 Broadcast Search:Please select the Z39.50 servers to which you want to send your search
+Z39MULTI=500:100
+
+# Course Reserves Options
+# IMAGE_PRINT=yes
+# IMAGE_SAVE=yes
+IMAGE_MATTYPEx=/screens/f_eaudiobook.gif
+RIGHT_CELL_WIDTH=10|10
+
+ICON_SUBMIT=<img src="/screens/submit.gif" alt="Submit" border="0" />
+ICON_CANCEL=<img src="/screens/cancel.gif" alt="Cancel" border="0" />
+ICON_MFFAVS_HOME=/screens/mffavs_home.gif
+ICON_MFFAVS_SEARCH=/screens/mffavs_search.gif
+ICON_PAT_MFFAVS=/screens/pat_mffavs.giv
+MFFAVS_ALL=t
+# MFFAVS_CONFIRM=
+PATFEED_HOLDS_READY=Materials ready for pickup on hold shelf
+PATFEED_ITEMS_DUE_SOON=Materials due soon
+PATFEED_ITEMS_DUE_TODAY=Materials due today
+PATFEED_ITEMS_OVERDUE=Materials overdue
+PATFEED_ITEMS_BOOKED_TOMORROW=Materials booked tomorrow
+PATFEED_ITEMS_RECALLED=Materials recalled
+PATFEED_FINES_INCURRED_RECENTLY=New fine or fee
+ICON_PATFEED=<span class="patFunc">My Record Feeds</span>
+PATFEED_CONFIG=|Your Library Record News|Follow links to library record for full details.
+
+ICON_SPELLCHECK_MORE=more&nbsp;&raquo;
+
+ICON_SPELLCHECK_SEARCH=<img src="/screens/go_but.gif" class="button"
+border="0" alt="Search">
+SPELLCHECK=Did you mean %a? %s 
+STAFF_LOGGEDIN_MSG=You are logged into %s as STAFF
+IMAGE_MATTYPEm=/screens/f_playaway.gif
+BIBIMAGE=http://syndetics.com/hw7.pl?isbn=%s/SC.GIF&client=yoursyndid|I|http://syndetics.com/hw7.pl?isbn=%s/LC.JPG&client=yoursyndid
+PATFEEDS_MT=10.0.0.8
+# BIBREQUEST=
+FREEZE_HOLDS=true
+FREEZE_HOLDS=t
+FREEZE_HOLDS=t
+# FREEZE_HOLDS=
+DIACLIST=utf8;Unicode
+ICON_READING_HISTORY=Reading History
+ICON_READING_HISTORY_OPTIN=Opt In
+ICON_READING_HISTORY_OPTOUT=Opt Out
+READING_HISTORY_DELETE=true
+XRECTYPE=boi

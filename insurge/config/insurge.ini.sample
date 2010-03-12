@@ -1,0 +1,17 @@
+; This is the Locum configuration file
+
+; General configuration options for your installation of Insurge.
+[insurge_config]
+dsn_file 					= "/home/jblyberg/dev/dsn/locum.php"
+
+; This is where you configure your repository membership information.
+; 
+; parent_server is the server name of the repository parent server you have been
+; told to use.
+; group_id = The group ID you have been given by your repository admin.  
+; These configuration points are optional and are only necessary if you are
+; participating in a repository relationship.
+[repository_info]
+parent_server				= "insurge.darienlibrary.org"
+group_id					= "darien"
+group_key					= "13f5940c5f853b6528d4925cbd5447a2"

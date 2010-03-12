@@ -1,0 +1,20 @@
+List of maintainers
+--------------------------------------------------------------------------------
+
+LEGEND
+======
+
+- M: the maintainer
+- S: status:
+      "supported"     : someone is actually paid to look after this.
+      "maintained"    : someone actually looks after it.
+      "fixes/patches" : it has a maintainer but they don't have time to
+                        do much other than throw the odd patch in.
+      "orphan"        : no current maintainer, but maybe you could take
+                        the role as you write new code?
+
+--------------------------------------------------------------------------------
+
+GENERAL DEVELOPMENT AND PROJECT MANAGEMENT
+M: John Blyberg <john@blyberg.net>
+S: maintained
