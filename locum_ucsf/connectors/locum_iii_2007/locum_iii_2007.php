@@ -247,8 +247,36 @@ class locum_iii_2007 {
     
     /*-------- University library items ----- */
     
-    $journal_tags = array('852', '866');
+//      852	Array [4]	
+//      	a	Array [1]	
+//      		18	Array [1]	
+//      			0	UCSF	
+//      	b	Array [1]	
+//      		18	Array [1]	
+//      			0	nrlfj	
+//      	j	Array [1]	
+//      		18	Array [1]	
+//      			0	W1 BI 557	
+//      	3	Array [1]	
+//      		18	Array [1]	
+//      			0	v.1(1958)-v.5:no.1(1962)	
+    if(isset($bib_info_marc[852]) || isset($bib_info_marc[866])){
+      $test=1;
+    }
     
+    
+    $holdings = array();
+    $journal_tags = array('852', '866');
+    foreach ($journal_tags as $journal_tag) {
+      $journal_arr = self::prepare_marc_values($bib_info_marc[$journal_tag], array('a','b','j','3'));
+      if (is_array($journal_arr)) {
+        foreach ($journal_arr as $journal_arr_val) {
+          array_push($holdings, $journal_arr_val);
+        }
+      }
+    }
+    $bib['holdings'] = '';
+    if (count($holdings)) { $bib['holdings'] = $holdings; }
     
     /*-------- /University library items ----- */
     

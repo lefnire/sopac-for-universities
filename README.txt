@@ -60,10 +60,32 @@ vim /etc/mysql/my.cnf
 vim /usr/local/lib/locum/config/locum.ini
 	# change [ils_config] -> ils_server
   
+(5) Harvest [http://thesocialopac.net/node/17]
+chmod +x /usr/local/lib/locum/tools/harvest.php
+/usr/local/lib/locum/tools/harvest.php  
+
+#if this returns >0, continue
+mysql> SELECT COUNT(*) FROM locum_bib_items;
+
+chmod +x /usr/local/lib/insurge/tools/update-index.php
+ln -s /usr/local/lib/insurge/tools/update-index.php /etc/cron.hourly/locum
+
+/usr/local/sphinx/bin/indexer --all
+/etc/init.d/sphinx start
+
+(6) Maint scripts [http://thesocialopac.net/node/21]
+chmod +x /usr/local/lib/locum/tools/maint.php
+ln -s /usr/local/lib/locum/tools/maint.php /etc/cron.daily/locum
+
+ln -s /etc/init.d/sphinx /etc/rc2.d/S99-Sphinx
   
-(5) When I get the MDB2 error, I just reset my whole database [http://thesocialopac.net/node/14#comment-117]
+  
+***When I get the MDB2 error, I just reset my whole database [http://thesocialopac.net/node/14#comment-117]
 mysqladmin -uroot -proot drop scas && mysqladmin -uroot -proot create scas
 mysql -uroot -proot < /usr/local/lib/insurge/sql/scas_insurge.sql
 mysql -uroot -proot < /usr/local/lib/locum/sql/scas_locum.sql
-mysql -uroot -proot < /var/lib/mysql/locum_init.sql  
+mysql -uroot -proot < /usr/local/lib/locum/sql/locum_init.sql
+mysql -uroot -proot < /usr/local/lib/locum/sql/locum_university_init.sql    
+#mysql -uroot -proot < /var/lib/mysql/locum_init.sql  
+ 
  
