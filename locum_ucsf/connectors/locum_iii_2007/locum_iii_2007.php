@@ -53,6 +53,9 @@ class locum_iii_2007 {
 
     $bnum = trim($bnum);
 
+    // annals of hematology: http://ucsfcat.ucsf.edu:2082/search~24/.b{bnum}/.b{bnum}/1,1,1,B/marc~{bnum}&FF=&1,0,
+    // set breakpoint here and modify $bnum to 1246763
+//    $bnum=1246763;
     $xrecord = @simplexml_load_file($iii_server_info['nosslurl'] . '/xrecord=b' . $bnum);
 
     // If there is no record, return false (weeded or non-existent)
@@ -128,10 +131,11 @@ class locum_iii_2007 {
 
     // Title information
     $bib['title'] = '';
-    $title = self::prepare_marc_values($bib_info_marc['245'], array('a','b'));
+    $title = self::prepare_marc_values($bib_info_marc['245'], array('a','b', 'c'));
     if (substr($title[0], -1) == '/') { $title[0] = trim(substr($title[0], 0, -1)); }
     $bib['title'] = trim($title[0]);
 
+    // TODO: 245 correct, check 'h'
     // Title medium information
     $bib['title_medium'] = '';
     $title_medium = self::prepare_marc_values($bib_info_marc['245'], array('h'));
@@ -140,12 +144,14 @@ class locum_iii_2007 {
         $bib['title_medium'] = $medium_match[1];
       }
     }
+
     
     // Edition information
     $bib['edition'] = '';
     $edition = self::prepare_marc_values($bib_info_marc['250'], array('a'));
     $bib['edition'] = trim($edition[0]);
 
+    // TODO: Unchecked
     // Series information
     $bib['series'] = '';
     $series = self::prepare_marc_values($bib_info_marc['490'], array('a','v'));
@@ -160,7 +166,9 @@ class locum_iii_2007 {
 
     // Call number
     $callnum = '';
-    $callnum_arr = self::prepare_marc_values($bib_info_marc['099'], array('a'));
+    // Journal callnum = 096a,b ; Book callnum = 050a,b
+    $call_marc_code = ($bib['mat_code']=='j') ? '096': '050';
+    $callnum_arr = self::prepare_marc_values($bib_info_marc[$call_marc_code], array('a', 'b'));
     if (is_array($callnum_arr) && count($callnum_arr)) {
       foreach ($callnum_arr as $cn_sub) {
         $callnum .= $cn_sub . ' ';
@@ -168,11 +176,13 @@ class locum_iii_2007 {
     }
     $bib['callnum'] = trim($callnum);
   
-    // Publication information
+    //TODO: called 'Imprint' in tpl.phps
+    // Publication information (journal.imprint)
     $bib['pub_info'] = '';
     $pub_info = self::prepare_marc_values($bib_info_marc['260'], array('a','b','c'));
     $bib['pub_info'] = $pub_info[0];
 
+    
     // Publication year
     $bib['pub_year'] = '';
     $pub_year = self::prepare_marc_values($bib_info_marc['260'], array('c'));
@@ -180,11 +190,14 @@ class locum_iii_2007 {
     $c_key = count($c_arr) - 1;
     $bib['pub_year'] = substr(ereg_replace("[^0-9]", '', $c_arr[$c_key]), -4);
 
+    // TODO: This is an array for books, and 022a for journals
     // ISBN / Std. number
     $bib['stdnum'] = '';
-    $stdnum = self::prepare_marc_values($bib_info_marc['020'], array('a'));
+    $stdnum_marc_code = ($bib['mat_code']=='j') ? '022': '020';
+    $stdnum = self::prepare_marc_values($bib_info_marc[$stdnum_marc_code], array('a'));
     $bib['stdnum'] = $stdnum[0];
     
+    // TODO: Unchecked
     // UPC
     $bib['upc'] = '';
     $upc = self::prepare_marc_values($bib_info_marc['024'], array('a'));
@@ -197,7 +210,7 @@ class locum_iii_2007 {
       if ($bib['stdnum']) { $bib['cover_img'] = locum_server::get_cover_img($bib['stdnum']); }
     }
 
-    // LCCN
+    // LCCN (LC Card#)
     $bib['lccn'] = '';
     $lccn = self::prepare_marc_values($bib_info_marc['010'], array('a'));
     $bib['lccn'] = $lccn[0];
@@ -212,12 +225,15 @@ class locum_iii_2007 {
     $descr = self::prepare_marc_values($bib_info_marc['300'], array('a','b','c'));
     $bib['descr'] = $descr[0];
 
+    // TODO: journal.notes = (310, 362, 500, 510'x', 530 550) -- find more
+    //       book.notes = (504) -- find more
     // Notes
     $notes = array();
     $bib['notes'] = '';
-    $notes_tags = array('500','505','511','520');
+//    $notes_tags = array('500','505','511','520');
+    $notes_tags = array('310', '362', '500', '504', '505','510', '511','520', '530', '550');
     foreach ($notes_tags as $notes_tag) {
-      $notes_arr = self::prepare_marc_values($bib_info_marc[$notes_tag], array('a'));
+      $notes_arr = self::prepare_marc_values($bib_info_marc[$notes_tag], array('a', 'x'));
       if (is_array($notes_arr)) {
         foreach ($notes_arr as $notes_arr_val) {
           array_push($notes, $notes_arr_val);
@@ -246,37 +262,47 @@ class locum_iii_2007 {
     if (count($subjects)) { $bib['subjects'] = $subjects; }
     
     /*-------- University library items ----- */
-    
-//      852	Array [4]	
-//      	a	Array [1]	
-//      		18	Array [1]	
-//      			0	UCSF	
-//      	b	Array [1]	
-//      		18	Array [1]	
-//      			0	nrlfj	
-//      	j	Array [1]	
-//      		18	Array [1]	
-//      			0	W1 BI 557	
-//      	3	Array [1]	
-//      		18	Array [1]	
-//      			0	v.1(1958)-v.5:no.1(1962)	
-    if(isset($bib_info_marc[852]) || isset($bib_info_marc[866])){
-      $test=1;
-    }
-    
-    
-    $holdings = array();
-    $journal_tags = array('852', '866');
-    foreach ($journal_tags as $journal_tag) {
-      $journal_arr = self::prepare_marc_values($bib_info_marc[$journal_tag], array('a','b','j','3'));
-      if (is_array($journal_arr)) {
-        foreach ($journal_arr as $journal_arr_val) {
-          array_push($holdings, $journal_arr_val);
+
+    // Additional Journal Information
+    if($bib['mat_code']=='j'){
+      /*Journal:
+          x Call # 	W1 AN 589
+          x Title 	Annals of hematology
+          x Imprint 	Berlin ; New York : Springer International, c1991-
+          TODO: Holdings 	UCSF jrnl W1 AN 589 v.62(1991)-v.81(2002)
+          TODO: Continues 	Blut 0006-5242
+          	
+          TODO: Link to online version below:
+          TODO: v.62(1991)- SpringerLink. Restricted to UC campuses
+          x Location	Parnassus: Journals - 1st Floor 
+          TODO: Holdings	v.62(1991)-v.81(2002), Library lacks: v.75:no.4(1997)
+          x Note 	Twelve issues per year
+          x 	Title from cover
+          x 	Chemical abstracts 0009-2258
+          x 	Some issues, including those published under an earlier title, also issued online
+          x 	Organ of Deutsche Gesellschaft für Hämatologie und Onkologie and other similar societies
+          TODO: Link 	Annals of hematology (Online) 1432-0584
+          x Subject 	Blood -- Periodicals
+          x 	Blood -- Diseases -- Periodicals
+          x 	Hematology -- Periodicals
+          x Alt Title 	SpringerLink online journals. a
+          x Alt Author 	Deutsche Gesellschaft für Hämatologie und Onkologie
+          x Descript 	v. : ill., ports. ; 25 cm
+      */
+      $holdings = array();
+      $holdings_tags = array('852', '866');
+      foreach ($holdings_tags as $holdings_tag) {
+        $holdings_arr = self::prepare_marc_values($bib_info_marc[$holdings_tag], array('a','b','j','3'));
+        if (is_array($holdings_arr)) {
+          foreach ($holdings_arr as $holdings_arr_val) {
+            array_push($holdings, $holdings_arr_val);
+          }
         }
       }
+      $bib['holdings'] = '';
+      if (count($holdings)) { $bib['holdings'] = $holdings; }
     }
-    $bib['holdings'] = '';
-    if (count($holdings)) { $bib['holdings'] = $holdings; }
+    
     
     /*-------- /University library items ----- */
     

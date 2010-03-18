@@ -125,18 +125,23 @@ class locum_server extends locum {
           }
           
           
-          // TODO: remember to create the locum_journal_info table, integer:bnum text:journal_info          
-          // ucsf import journal info
-          $journal = $bib['holdings'];
-          $bib_values['holdings'] = serialize($journal);
-          if (is_array($journal) && count($journal)) {
-            foreach ($journal as $journal_holding) {
-              $insert_data = array($bib['bnum'], $journal_holding);
-              $types = array('integer', 'text');
-              $sql_prep = $db->prepare('INSERT INTO locum_bib_items_journal VALUES (?, ?)', $types, MDB2_PREPARE_MANIP);
-              $affrows = $sql_prep->execute($insert_data);
-              $sql_prep->free();
+          // Remember to run locum_university_init.sql          
+          // Import additional journal info ala Millennium's Journal module
+          if($bib['marc_code']=='j'){
+            
+            //holdings
+            $journal = $bib['holdings'];
+            $bib_values['holdings'] = serialize($journal);
+            if (is_array($journal) && count($journal)) {
+              foreach ($journal as $journal_holding) {
+                $insert_data = array($bib['bnum'], $journal_holding);
+                $types = array('integer', 'text');
+                $sql_prep = $db->prepare('INSERT INTO locum_bib_items_journal VALUES (?, ?)', $types, MDB2_PREPARE_MANIP);
+                $affrows = $sql_prep->execute($insert_data);
+                $sql_prep->free();
+              }
             }
+            
           }
           
           

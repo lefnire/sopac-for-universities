@@ -1,3 +1,5 @@
+***NOTE: This project is unusable right now, stay tuned *****
+
 This project is to extend John Blyberg's SOPAC Drupal module, giving it functionality useful to University libraries.  SOPAC currently supports public libraries well, but these extensions aim to add things like detailed journal information, course reserves information, and ideally replicate the functionality of any WebOpac module offered by III.  Right now I'm just copying in my whole "Libraries" directory (I use symlinks from /usr/local/lib/locum, etc), but later once I get this thing panned out & de-coupled properly, this repo will only contain the necessary overrides (locum-hooks.php, locum_iii_2007/, etc)
 
 These are the steps *I* took to get it working on my Mac, will vary depending on your machine. 
@@ -53,6 +55,7 @@ mysql -u root -p < /usr/local/lib/insurge/sql/scas_insurge.sql
 (4) Install Locum -- [http://thesocialopac.net/node/14]
 
 mysql -u root -p < /usr/local/lib/locum/sql/scas_locum.sql
+** mysql -uroot -p < /usr/local/lib/locum/sql/locum_university_init.sql #This item is new, adds additional university-specific information
 vim /etc/mysql/my.cnf
  	# Add to [mysqld]:
  	max_heap_table_size = 200M
