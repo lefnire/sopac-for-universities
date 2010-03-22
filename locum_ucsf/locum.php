@@ -86,7 +86,7 @@ class locum {
    * @param string $separator Optional separator string for the values.  Defaults to comma.
    * @return string|array Formatted values
    */
-  public function csv_parser($csv, $implode = FALSE, $separator = ',') {
+  public static function csv_parser($csv, $implode = FALSE, $separator = ',') {
     
     $csv_array = explode($separator, trim($csv));
     $cleaned = array();

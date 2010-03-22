@@ -322,7 +322,7 @@ class locum_iii_2007 {
   public function item_status($bnum) {
     
     $iii_server_info = self::iii_server_info();
-    $avail_token = locum::csv_parser($this->locum_config['ils_custom_config']['iii_available_token']);
+    $avail_token = locum::csv_parser($this->locum_config['iii_custom_config']['iii_available_token']);
     $default_age = $this->locum_config['iii_custom_config']['default_age'];
     $default_branch = $this->locum_config['iii_custom_config']['default_branch'];
     $loc_codes_flipped = array_flip($this->locum_config['iii_location_codes']);
