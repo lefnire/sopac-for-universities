@@ -484,6 +484,7 @@ class locum_client extends locum {
     
     $db = MDB2::connect($this->dsn);
     
+    $force_refresh=TRUE; //debugging
     if (!$force_refresh && $this->locum_config['avail_cache']['cache']) {
       $this->locum_config['avail_cache']['cache_cutoff'];
       $cache_cutoff = date("Y-m-d H:i:s", (time() - (60 * $this->locum_config['avail_cache']['cache_cutoff'])));
