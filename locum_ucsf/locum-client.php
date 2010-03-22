@@ -125,9 +125,9 @@ class locum_client extends locum {
     // Filter out the records we don't want shown, per locum.ini
     if (!$override_search_filter) {
       if (trim($this->locum_config['location_limits']['no_search'])) {
-        $cfg_filter_arr = parent::csv_parser($this->locum_config['location_limits']['no_search']);
+        $cfg_filter_arr = $this->csv_parser($this->locum_config['location_limits']['no_search']);
         foreach ($cfg_filter_arr as $cfg_filter) {
-          $cfg_filter_vals[] = parent::string_poly($cfg_filter);
+          $cfg_filter_vals[] = $this->string_poly($cfg_filter);
         }
         $cl->SetFilter('loc_code', $cfg_filter_vals, TRUE);
       }
@@ -188,7 +188,7 @@ class locum_client extends locum {
     if (is_array($format_array)) {
       foreach ($format_array as $format) {
         if (strtolower($format) != 'all') {
-          $filter_arr_mat[] = parent::string_poly(trim($format));
+          $filter_arr_mat[] = $this->string_poly(trim($format));
         }
       }
       if (count($filter_arr_mat)) { $cl->SetFilter('mat_code', $filter_arr_mat); }
@@ -198,7 +198,7 @@ class locum_client extends locum {
     if (count($location_array)) {
       foreach ($location_array as $location) {
         if (strtolower($location) != 'all') {
-          $filter_arr_loc[] = parent::string_poly(trim($location));
+          $filter_arr_loc[] = $this->string_poly(trim($location));
         }
       }
       if (count($filter_arr_loc)) { $cl->SetFilter('loc_code', $filter_arr_loc); }
@@ -226,7 +226,7 @@ class locum_client extends locum {
     $final_result_set['num_hits'] = $sph_res['total'];
     if ($sph_res['total'] <= $this->locum_config['api_config']['suggestion_threshold']) {
       if ($this->locum_config['api_config']['use_yahoo_suggest'] == TRUE) {
-        $final_result_set['suggestion'] = self::yahoo_suggest($term_prestrip);
+        $final_result_set['suggestion'] = $this->yahoo_suggest($term_prestrip);
       }
     }
     
@@ -276,7 +276,7 @@ class locum_client extends locum {
       unset($bib_hits);
       $available_count = 0;
       foreach ($bib_hits_all as $key => $bib_hit) {
-        $bib_avail = self::get_item_status($bib_hit);
+        $bib_avail = $this->get_item_status($bib_hit);
         if ($limit_available == 'any') {
           $available = $bib_avail['avail'];
         } else {
@@ -359,13 +359,7 @@ class locum_client extends locum {
         $sql = 'SELECT DISTINCT(bnum) FROM locum_avail_ages WHERE bnum IN (' . implode(', ', $bib_hits_all) . ") AND ($age_sql_cond)";
         $init_result =& $db->query($sql);
         $age_hits = $init_result->fetchCol();
-        foreach ($bib_hits_all as $bnum_age_chk) {
-          if (in_array($bnum_age_chk, $age_hits)) {
-            $new_bib_hits_all[] = $bnum_age_chk;
-          }
-        }
-        $bib_hits_all = $new_bib_hits_all;
-        unset($new_bib_hits_all);
+        $bib_hits_all = array_intersect($bib_hits_all, $age_hits);
       }
       
       if(!empty($bib_hits_all)) {
@@ -394,7 +388,7 @@ class locum_client extends locum {
       $init_bib_arr = $init_result->fetchAll(MDB2_FETCHMODE_ASSOC);
       foreach ($init_bib_arr as $init_bib) {
         // Get availability
-        $init_bib['availability'] = self::get_item_status($init_bib['bnum']);
+        $init_bib['availability'] = $this->get_item_status($init_bib['bnum']);
         // Clean up the Stdnum
         $init_bib['stdnum'] = preg_replace('/[^\d]/','', $init_bib['stdnum']);
         $bib_reference_arr[(string) $init_bib['bnum']] = $init_bib;
@@ -409,7 +403,7 @@ class locum_client extends locum {
     }
     
     $db->disconnect();
-    $final_result_set['facets'] = self::facetizer($bib_hits_all);
+    $final_result_set['facets'] = $this->facetizer($bib_hits_all);
     if($forcedchange == 'yes') { $final_result_set['changed'] = 'yes'; }
     
     return $final_result_set;
@@ -546,7 +540,7 @@ class locum_client extends locum {
           $result['callnums'][] = $item['callnum'];
         }
         // Determine next item due date
-        if ($result['nextdue'] == 0 || $result['nextdue'] > $item['due']) {
+        if ($result['nextdue'] == 0 || ($item['due'] > 0 && $result['nextdue'] > $item['due'])) {
           $result['nextdue'] = $item['due'];
         }
         // Parse location code
@@ -561,12 +555,7 @@ class locum_client extends locum {
     }
     
     // Cache the result
-    $bib_item = self::get_bib_item($bnum);
-    // Update Cache
     $avail_ser = serialize($result);
-    $ages = count($result['ages']) ? "'" . implode(',', $result['ages']) . "'" : 'NULL';
-    $locs = count($loc_codes) ? "'" . implode(',', $loc_codes) . "'" : 'NULL';
-    $bib_loc = $bib_item['loc_code'] ? "'" . $bib_item['loc_code'] . "'" : 'NULL';
     $sql = "REPLACE INTO locum_availability (bnum, available) VALUES (:bnum, :available)";
     $statement = $db->prepare($sql, array('integer', 'text'));
     $dbr = $statement->execute(array('bnum' => $bnum, 'available' => $avail_ser));
@@ -578,10 +567,18 @@ class locum_client extends locum {
     // Store age cache
     $db->query("DELETE FROM locum_avail_ages WHERE bnum = '$bnum'");
     if (count($result['ages'])) {
-      $sql = "INSERT INTO locum_avail_ages (bnum, age, count_avail, count_total, timestamp) VALUES (:bnum, :age, :count_avail, :count_total, NOW())";
+      $sql = "INSERT INTO locum_avail_ages 
+      	(bnum, age, count_avail, count_total, timestamp) 
+      	VALUES (:bnum, :age, :count_avail, :count_total, NOW())
+      ";
       $statement = $db->prepare($sql, array('integer', 'text', 'integer', 'integer'));
       foreach ($result['ages'] as $age => $age_info) {
-        $dbr = $statement->execute(array('bnum' => $bnum, 'age' => $age, 'count_avail' => $age_info['avail'], 'count_total' => $age_info['total']));
+        $dbr = $statement->execute(array(
+        	'bnum' => $bnum, 
+        	'age' => $age, 
+        	'count_avail' => $age_info['avail'], 
+        	'count_total' => $age_info['total'])
+        );
       }
       $statement->Free();
     }
@@ -589,10 +586,18 @@ class locum_client extends locum {
     // Store branch info cache
     $db->query("DELETE FROM locum_avail_branches WHERE bnum = '$bnum'");
     if (count($result['branches'])) {
-      $sql = "INSERT INTO locum_avail_branches (bnum, branch, count_avail, count_total, timestamp) VALUES (:bnum, :branch, :count_avail, :count_total, NOW())";
+      $sql = "INSERT INTO locum_avail_branches 
+      	(bnum, branch, count_avail, count_total, timestamp) 
+      	VALUES (:bnum, :branch, :count_avail, :count_total, NOW())
+      ";
       $statement = $db->prepare($sql, array('integer', 'text', 'integer', 'integer'));
       foreach ($result['branches'] as $branch => $branch_info) {
-        $dbr = $statement->execute(array('bnum' => $bnum, 'branch' => $branch, 'count_avail' => $branch_info['avail'], 'count_total' => $branch_info['total']));
+        $dbr = $statement->execute(array(
+        	'bnum' => $bnum, 
+        	'branch' => $branch, 
+        	'count_avail' => $branch_info['avail'], 
+        	'count_total' => $branch_info['total'])
+        );
       }
       $statement->Free();
     }
@@ -655,22 +660,56 @@ class locum_client extends locum {
     }
     return $bib;
   }
+	
+	/**
+	 * Create a new patron in the ILS
+	 * 
+	 * Note: this may not be supported by all connectors. Further, it may turn out that
+	 * different ILS's require different data for this function. Thus the $patron_data
+	 * parameter is an array which can contain whatever is appropriate for the current ILS.
+	 *
+	 * @param array $patron_data
+	 * @return var
+	 */
+	public function create_patron($patron_data) {
+		if (!is_array($patron_data) || !count($patron_data)) {
+			return false;
+		}
+		$new_patron = $this->locum_cntl->create_patron($patron_data);
+		return $new_patron;
+	}
 
-  /**
-   * Returns an array of patron information
-   *
-   * @param string $pid Patron barcode number or record number
-   * @return boolean|array Array of patron information or FALSE if login fails
-   */
-  public function get_patron_info($pid) {
+	/**
+	 * Returns an array of patron information
+	 *
+	 * @param string $pid Patron barcode number or record number
+	 * @param string $user_key for use with Sirsi
+	 * @param string $alt_id for use with Sirsi
+	 * @return boolean|array Array of patron information or FALSE if login fails
+	 */
+	public function get_patron_info($pid = null, $user_key = null, $alt_id = null) {
     if (is_callable(array(__CLASS__ . '_hook', __FUNCTION__))) {
       eval('$hook = new ' . __CLASS__ . '_hook;');
-      return $hook->{__FUNCTION__}($pid);
+      return $hook->{__FUNCTION__}($pid, $user_key, $alt_id);
     }
     
-    $patron_info = $this->locum_cntl->patron_info($pid);
-    return $patron_info;
-  }
+		$patron_info = $this->locum_cntl->patron_info($pid, $user_key, $alt_id);
+		return $patron_info;
+	}
+	
+	/**
+	 * Update user info in ILS.
+	 * Note: this may not be supported by all connectors. 
+	 *
+	 * @param string $pid Patron barcode number or record number
+	 * @param string $email address to set
+	 * @param string $pin to set
+	 * @return boolean|array
+	 */
+	public function set_patron_info($pid, $email = null, $pin = null) {
+		$success = $this->locum_cntl->set_patron_info($pid, $email, $pin);
+		return $success;
+	}
 
   /**
    * Returns an array of patron checkouts

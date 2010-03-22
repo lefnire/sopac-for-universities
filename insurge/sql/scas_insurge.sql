@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS `insurge_history` (
   `codate` datetime NOT NULL,
   `title` text,
   `author` text,
+  `added` datetime NOT NULL
   PRIMARY KEY  (`hist_id`),
   KEY `repos_id` (`repos_id`,`group_id`,`uid`,`bnum`,`codate`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Tracks patron check-out history';

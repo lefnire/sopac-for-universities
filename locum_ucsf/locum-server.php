@@ -42,17 +42,17 @@ class locum_server extends locum {
         $pid = pcntl_fork();
         if ($pid != -1) {
           if ($pid) {
-            parent::putlog("Spawning child harvester to scan records $start - $end. PID is $pid ..");
+            $this->putlog("Spawning child harvester to scan records $start - $end. PID is $pid ..");
           } else {
             sleep(1);
             ++$i;
             if ($i == $num_children) { $end++; }
-            $result = self::import_bibs($start, $end);
-            parent::putlog("Child process complete.  Scanned records $start - $end.  Imported " . $result['imported'] . " records and skipped $result[skipped] ..", 2);
+            $result = $this->import_bibs($start, $end);
+            $this->putlog("Child process complete.  Scanned records $start - $end.  Imported " . $result['imported'] . " records and skipped $result[skipped] ..", 2);
             exit($i);
           }
         } else {
-          parent::putlog("Unable to spawn harvester: ($i)", 5);
+          $this->putlog("Unable to spawn harvester: ($i)", 5);
         }
         $start = $new_start;
       }
@@ -62,10 +62,10 @@ class locum_server extends locum {
           $val = pcntl_wexitstatus($status);
           --$i;
           }
-        parent::putlog("Harvest complete!", 3);
+        $this->putlog("Harvest complete!", 3);
       }
     } else {
-      $result = self::import_bibs($start, $end);
+      $result = $this->import_bibs($start, $end);
     }
   }
 
@@ -111,7 +111,7 @@ class locum_server extends locum {
           $sql_prep = $db->prepare('INSERT INTO locum_bib_items VALUES (:bnum, :author, :addl_author, :title, :title_medium, :edition, :series, :callnum, :pub_info, :pub_year, :stdnum, :upc, :lccn, :descr, :notes, :subjects_ser, :lang, :loc_code, :mat_code, :cover_img, :download_link, NOW(), :bib_created, :bib_lastupdate, :bib_prevupdate, :bib_revs, \'1\')');
           
           $affrows = $sql_prep->execute($bib_values);
-          parent::putlog("Importing bib # $i - $bib[title]");
+          $this->putlog("Importing bib # $i - $bib[title]");
           $sql_prep->free();
 
           if (is_array($subj) && count($subj)) {
@@ -249,12 +249,12 @@ class locum_server extends locum {
           }
         }
         
-        parent::putlog("Updated record # $bnum - $bib[title]", 2, TRUE);
+        $this->putlog("Updated record # $bnum - $bib[title]", 2, TRUE);
         $updated++;
       }
     }
     $db->disconnect();
-    parent::putlog("Processed $firstbib - $lastbib");
+    $this->putlog("Processed $firstbib - $lastbib");
     return array('retired' => $retired, 'updated' => $updated, 'skipped' => $skipped);
   }
 
@@ -275,8 +275,8 @@ class locum_server extends locum {
     $next_bib = $max_bib + 1;
     $last_bib = $next_bib + $this->locum_config['harvest_config']['harvest_reach'];
     $db->disconnect();
-    parent::putlog("Harvesting bibs # $next_bib - $last_bib", 2, TRUE);
-    self::harvest_bibs($next_bib, $last_bib);
+    $this->putlog("Harvesting bibs # $next_bib - $last_bib", 2, TRUE);
+    $this->harvest_bibs($next_bib, $last_bib);
   }
   
   /**
@@ -421,7 +421,7 @@ class locum_server extends locum {
     $limit = 1000;
     $offset = 0;
     
-    parent::putlog("Collecting current data keys ..");
+    $this->putlog("Collecting current data keys ..");
     $db = MDB2::connect($this->dsn);
     $sql = "SELECT bnum, bib_lastupdate FROM locum_bib_items WHERE active = '1' ORDER BY bnum LIMIT $limit";
     $init_result = $db->query($sql);
@@ -435,7 +435,7 @@ class locum_server extends locum {
         $bib_arr[$init_bib_arr_vals['bnum']] = $init_bib_arr_vals['bib_lastupdate'];
       }
       $db->disconnect();
-      parent::putlog("Finished collecting data keys.");
+      $this->putlog("Finished collecting data keys.");
 
       if (extension_loaded('pcntl') && $this->locum_config['harvest_config']['harvest_with_children'] && ($num_to_process >= (2 * $num_children))) {
       
@@ -449,21 +449,21 @@ class locum_server extends locum {
           $pid = pcntl_fork();
           if ($pid != -1) {
             if ($pid) {
-              parent::putlog("Spawning child harvester to verify records of $start - $end. PID is $pid ..");
+              $this->putlog("Spawning child harvester to verify records of $start - $end. PID is $pid ..");
             } else {
               sleep(1);
               ++$i;
               if ($i == $num_children) { $end++; }
               $bib_arr_sliced = array_slice($bib_arr, $split_offset, $increment, TRUE);
               $num_bibs = count($bib_arr_sliced);
-              $tmp = self::update_bib($bib_arr_sliced);
+              $tmp = $this->update_bib($bib_arr_sliced);
               $updated = $tmp['updated'];
               $retired = $tmp['retired'];
-              parent::putlog("Child process complete.  Checked $num_bibs records, updated $updated records, retired $retired records.", 2);
+              $this->putlog("Child process complete.  Checked $num_bibs records, updated $updated records, retired $retired records.", 2);
               exit($i);
             }
           } else {
-            parent::putlog("Unable to spawn harvester: ($i)", 5);
+            $this->putlog("Unable to spawn harvester: ($i)", 5);
           }
           $start = $new_start;
           $split_offset = $split_offset + $increment;
@@ -474,14 +474,14 @@ class locum_server extends locum {
             $val = pcntl_wexitstatus($status);
             --$i;
           }
-          parent::putlog("Verification complete!", 3);
+          $this->putlog("Verification complete!", 3);
         }
       } else {
         // TODO - Bib verification for those poor saps w/o pcntl
       }
       
       $offset = $offset + $limit;
-      parent::putlog("Collecting current data keys starting at $offset");
+      $this->putlog("Collecting current data keys starting at $offset");
       $db = MDB2::connect($this->dsn);
       $sql = "SELECT bnum, bib_lastupdate FROM locum_bib_items WHERE active = '1' ORDER BY bnum LIMIT $limit OFFSET $offset";
       $init_result = $db->query($sql);
@@ -505,7 +505,7 @@ class locum_server extends locum {
     $limit = 1000;
     $offset = 0;
 
-    parent::putlog("Collecting current data keys ..");
+    $this->putlog("Collecting current data keys ..");
     $db = MDB2::connect($this->dsn);
     $sql = "SELECT bnum, bib_lastupdate FROM locum_bib_items WHERE active = '1' ORDER BY bnum LIMIT $limit";
     $init_result = $db->query($sql);
@@ -520,7 +520,7 @@ class locum_server extends locum {
         $bib_arr[$init_bib_arr_vals['bnum']] = $init_bib_arr_vals['bib_lastupdate'];
       }
       $db->disconnect();
-      parent::putlog("Finished collecting data keys.");
+      $this->putlog("Finished collecting data keys.");
 
       if (extension_loaded('pcntl') && $this->locum_config['harvest_config']['harvest_with_children'] && ($num_to_process >= (2 * $num_children))) {
       
@@ -534,7 +534,7 @@ class locum_server extends locum {
           $pid = pcntl_fork();
           if ($pid != -1) {
             if ($pid) {
-              parent::putlog("Spawning child harvester to verify records. PID is $pid ..");
+              $this->putlog("Spawning child harvester to verify records. PID is $pid ..");
             } else {
               sleep(1);
               ++$i;
@@ -544,11 +544,11 @@ class locum_server extends locum {
               foreach ($bib_arr_sliced as $bnum => $init_bib_date) {
                 $locumclient->get_item_status($bnum, TRUE);
               }
-              parent::putlog("Child process complete.  Checked $num_bibs records", 2);
+              $this->putlog("Child process complete.  Checked $num_bibs records", 2);
               exit($i);
             }
           } else {
-            parent::putlog("Unable to spawn harvester: ($i)", 5);
+            $this->putlog("Unable to spawn harvester: ($i)", 5);
           }
           $start = $new_start;
           $split_offset = $split_offset + $increment;
@@ -559,13 +559,13 @@ class locum_server extends locum {
             $val = pcntl_wexitstatus($status);
             --$i;
           }
-          parent::putlog("Verification complete!", 3);
+          $this->putlog("Verification complete!", 3);
         }
       } else {
         // TODO - Bib verification for those poor saps w/o pcntl
       }
       $offset = $offset + $limit;
-      parent::putlog("Collecting current data keys starting at $offset");
+      $this->putlog("Collecting current data keys starting at $offset");
       $db = MDB2::connect($this->dsn);
       $sql = "SELECT bnum, bib_lastupdate FROM locum_bib_items WHERE active = '1' ORDER BY bnum LIMIT $limit OFFSET $offset";
       $init_result = $db->query($sql);
@@ -587,7 +587,7 @@ class locum_server extends locum {
     $limit = 1000;
     $offset = 0;
     
-    parent::putlog("Collecting current data keys ..");
+    $this->putlog("Collecting current data keys ..");
     $db = MDB2::connect($this->dsn);
     $sql = "SELECT stdnum,bib_lastupdate FROM locum_bib_items WHERE stdnum IS NOT NULL ORDER BY bib_lastupdate DESC LIMIT $limit";
     $init_result = $db->query($sql);
@@ -601,7 +601,7 @@ class locum_server extends locum {
         $bib_arr[$init_bib_arr_vals['stdnum']] = $init_bib_arr_vals['bib_lastupdate'];
       }
       $db->disconnect();
-      parent::putlog("Finished collecting data keys.");
+      $this->putlog("Finished collecting data keys.");
 
       if (extension_loaded('pcntl') && $this->locum_config['harvest_config']['harvest_with_children'] && ($num_to_process >= (2 * $num_children))) {
       
@@ -615,7 +615,7 @@ class locum_server extends locum {
           $pid = pcntl_fork();
           if ($pid != -1) {
             if ($pid) {
-              parent::putlog("Spawning child harvester to verify records. PID is $pid ..");
+              $this->putlog("Spawning child harvester to verify records. PID is $pid ..");
             } else {
               sleep(1);
               ++$i;
@@ -629,15 +629,15 @@ class locum_server extends locum {
                 } else {
                   $stdnum = $stdnum;
                 }
-                parent::putlog("Checking syndetics for $stdnum", 2);
-                $tmp = self::get_syndetics($stdnum);
+                $this->putlog("Checking syndetics for $stdnum", 2);
+                $tmp = $this->get_syndetics($stdnum);
               }
 
-              parent::putlog("Child process complete.  Checked $num_bibs records", 2);
+              $this->putlog("Child process complete.  Checked $num_bibs records", 2);
               exit($i);
             }
           } else {
-            parent::putlog("Unable to spawn harvester: ($i)", 5);
+            $this->putlog("Unable to spawn harvester: ($i)", 5);
           }
           $start = $new_start;
           $split_offset = $split_offset + $increment;
@@ -648,13 +648,13 @@ class locum_server extends locum {
             $val = pcntl_wexitstatus($status);
             --$i;
           }
-          parent::putlog("Verification complete!", 3);
+          $this->putlog("Verification complete!", 3);
         }
       } else {
         // TODO - Bib verification for those poor saps w/o pcntl
       }
       $offset = $offset + $limit;
-      parent::putlog("Collecting current data keys starting at $offset");
+      $this->putlog("Collecting current data keys starting at $offset");
       $db = MDB2::connect($this->dsn);
       $sql = "SELECT stdnum,bib_lastupdate FROM locum_bib_items WHERE stdnum IS NOT NULL ORDER BY bib_lastupdate DESC LIMIT $limit OFFSET $offset";
       $init_result = $db->query($sql);
@@ -690,17 +690,17 @@ class locum_server extends locum {
     $image_url = '';
     if ($api_cfg['use_amazon_images'] && $api_cfg['use_syndetic_images']) {
       if ($api_cfg['amazon_img_prio'] >= $api_cfg['syndetic_img_prio']) {
-        $image_url = self::get_amazon_image($stdnum, $api_cfg['amazon_access_key']);
-        if (!$image_url) { $image_url = self::get_syndetic_image($stdnum, $api_cfg['syndetic_custid']); }
+        $image_url = $this->get_amazon_image($stdnum, $api_cfg['amazon_access_key']);
+        if (!$image_url) { $image_url = $this->get_syndetic_image($stdnum, $api_cfg['syndetic_custid']); }
       } else {
-        $image_url = self::get_syndetic_image($stdnum, $api_cfg['syndetic_custid']);
-        if (!$image_url) { $image_url = self::get_amazon_image($stdnum, $api_cfg['amazon_access_key']); }
+        $image_url = $this->get_syndetic_image($stdnum, $api_cfg['syndetic_custid']);
+        if (!$image_url) { $image_url = $this->get_amazon_image($stdnum, $api_cfg['amazon_access_key']); }
 
       }
     } else if ($api_cfg['use_amazon_images']) {
-      $image_url = self::get_amazon_image($stdnum, $api_cfg['amazon_access_key']);
+      $image_url = $this->get_amazon_image($stdnum, $api_cfg['amazon_access_key']);
     } else if ($api_cfg['use_syndetic_images']) {
-      $image_url = self::get_syndetic_image($stdnum, $api_cfg['syndetic_custid']);
+      $image_url = $this->get_syndetic_image($stdnum, $api_cfg['syndetic_custid']);
     }
     return $image_url;
   }

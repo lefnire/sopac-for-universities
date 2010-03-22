@@ -166,12 +166,15 @@ class locum_iii_2007 {
 
     // Call number
     $callnum = '';
-    // Journal callnum = 096a,b ; Book callnum = 050a,b
-    $call_marc_code = ($bib['mat_code']=='j') ? '096': '050';
-    $callnum_arr = self::prepare_marc_values($bib_info_marc[$call_marc_code], array('a', 'b'));
-    if (is_array($callnum_arr) && count($callnum_arr)) {
-      foreach ($callnum_arr as $cn_sub) {
-        $callnum .= $cn_sub . ' ';
+    // Journal callnum = 096a,b ; Book callnum = 050a,b, 90a,b
+    $call_marc_codes = array('099', '096', '090', '050');
+    foreach($call_marc_codes as $call_marc_code){
+      $callnum_arr = self::prepare_marc_values($bib_info_marc[$call_marc_code], array('a', 'b'));
+      if (is_array($callnum_arr) && count($callnum_arr)) {
+        foreach ($callnum_arr as $cn_sub) {
+          $callnum .= $cn_sub . ' ';
+        }
+        break;
       }
     }
     $bib['callnum'] = trim($callnum);
@@ -463,9 +466,17 @@ class locum_iii_2007 {
    * @return boolean|array Array of patron checkouts or FALSE if login fails
    */
   public function patron_checkout_history($cardnum, $pin = NULL) {
-    $iii = $this->get_tools($cardnum, $pin);
-    $result = $iii ? $iii->get_patron_history_items() : FALSE;
-    return $result;
+    $iii = $this->get_tools($cardnum, $pin, $action);
+    if ($iii->catalog_login() == FALSE) { return FALSE; }
+    $result = $iii ? $iii->get_patron_history_items($action) : FALSE;
+    $i = 0;
+    foreach ($result as $item) {
+      $hist_result[$i]['varname'] = $item['varname'];
+      $hist_result[$i]['bnum'] = $item['bnum'];
+      $hist_result[$i]['date'] = self::date_to_timestamp($item['date']);
+      $i++;
+    }
+    return $hist_result;
   }
   
   /**
@@ -477,6 +488,7 @@ class locum_iii_2007 {
    */
   public function patron_checkout_history_toggle($cardnum, $pin = NULL, $action) {
     $iii = $this->get_tools($cardnum, $pin);
+    if ($iii->catalog_login() == FALSE) { return FALSE; }
     $result = $iii ? $iii->toggle_patron_history($action) : FALSE;
     return $result;
   }

@@ -180,6 +180,7 @@ class iiitools {
     $result = self::parse_patron_history_items($result['body']);
     return $result;
   }
+  
   /**
    * Parses through the raw return from cURL to formulate the array passed back by get_patron_history_items()
    *

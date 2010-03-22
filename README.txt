@@ -6,6 +6,9 @@ These are the steps *I* took to get it working on my Mac, will vary depending on
 Best to follow http://thesocialopac.net/getting-started instead
 -----------------
 
+make sure to enable reserves in xrectype (see bottom of wwwoptions, just add 'r' to your list of xrectypes)
+
+
 (1) Symlinks based on SOPAC's expected directory locations  -- [http://thesocialopac.net/node/12]
 
 ln -s insurge /usr/local/lib/insurge
