@@ -129,13 +129,13 @@ class locum_iii_2007 {
     $bib['edition'] = trim(self::_prepare_marc_single($bib_info_marc, $marc['edition'], $marc['edition_sub'] ));
 
     // Series information
-    $bib['series'] = _prepare_marc_single($bib_info_marc, $marc['series'], $marc['series_sub'] );
+    $bib['series'] = self::_prepare_marc_single($bib_info_marc, $marc['series'], $marc['series_sub'] );
 
     // Call number
     $callnum = '';
     // Journal callnum = 096a,b ; Book callnum = 050a,b, 90a,b
-    foreach($call_marc_codes as $call_marc_code){
-      $callnum_arr = self::prepare_marc_values($bib_info_marc[$marc['callnum']], $marc['callnum_sub']);
+    foreach($marc['callnum'] as $call_marc_code){
+      $callnum_arr = self::prepare_marc_values($bib_info_marc[$call_marc_code], $marc['callnum_sub']);
       if (is_array($callnum_arr) && count($callnum_arr)) {
         foreach ($callnum_arr as $cn_sub) {
           $callnum .= $cn_sub . ' ';
@@ -156,20 +156,10 @@ class locum_iii_2007 {
     $bib['pub_year'] = substr(ereg_replace("[^0-9]", '', $c_arr[$c_key]), -4);
 
     // ISBN / Std. number
-    $bib['stdnum'] = '';
-    foreach ($mar['stdnum'] as $stdnum_marc_code){
-      $stdnum = self::_prepare_marc_single($bib_info_marc[$stdnum_marc_code], $marc['stdnum_sub']);
-      if($stdnum){
-        break;
-      }elseif(is_array($stdnum)){ 
-        //TODO: is this ever an array?
-        $this_shouldnt_happen = TRUE;
-      }
-    }
-    $bib['stdnum'] = $stdnum;
+    $bib['stdnum'] = self::_prepare_marc_single($bib_info_marc, $marc['stdnum'], $marc['stdnum_sub']);
     
     // UPC
-    $bib['upc'] = self::_prepare_marc_single($bib_info_marc[$marc['upc']], $marc['upc_sub']);
+    $bib['upc'] = self::_prepare_marc_single($bib_info_marc, $marc['upc'], $marc['upc_sub']);
     if($bib['upc'] == '') { $bib['upc'] = "000000000000"; }
 
     // Grab the cover image URL if we're doing that
@@ -179,20 +169,20 @@ class locum_iii_2007 {
     }
 
     // LCCN (LC Card#)
-    $bib['lccn'] = self::_prepare_marc_single($bib_info_marc[$marc['lccn']], $marc['lccn_sub']);
+    $bib['lccn'] = self::_prepare_marc_single($bib_info_marc, $marc['lccn'], $marc['lccn_sub']);
     
     // Download Link (if it's a downloadable)
-    $bib['download_link'] = self::_prepare_marc_single($bib_info_marc[$marc['download_link']], $marc['download_link_sub']);
+    $bib['download_link'] = self::_prepare_marc_single($bib_info_marc, $marc['download_link'], $marc['download_link_sub']);
 
     // Description
     //TODO: Make sure this is handled as multiple
-    $bib['descr'] = self::_prepare_marc_multiple($bib_info_marc[$marc['descr']], $marc['descr_sub']);
+    $bib['descr'] = self::_prepare_marc_single($bib_info_marc, $marc['descr'], $marc['descr_sub']);
 
     // Notes
-    $bib['notes'] = self::_prepare_marc_multiple($bib_info_marc[$marc['notes']], $marc['notes_sub']);
+    $bib['notes'] = self::_prepare_marc_multiple($bib_info_marc, $marc['notes'], $marc['notes_sub']);
 
     // Subject headings
-    $bib['subjects'] = self::_prepare_marc_multiple($bib_info_marc[$marc['subjects']], $marc['subjects_sub'], '--', FALSE);
+    $bib['subjects'] = self::_prepare_marc_multiple($bib_info_marc, $marc['subjects'], $marc['subjects_sub'], '--', FALSE);
     
     /*-------- Additional university library items ----- */
 
