@@ -1,0 +1,83 @@
+These are the steps I took to get SOPAC working on my Mac, will vary depending on your machine. 
+-----------------
+(1) Symlinks based on SOPAC's expected directory locations  -- [http://thesocialopac.net/node/12]
+
+ln -s insurge /usr/local/lib/insurge
+ln -s locum_ucsf /usr/local/lib/locum
+ln -s scas.php /usr/local/etc/scas.php
+ln -s sphinx.conf /usr/local/sphinx/etc/sphinx.conf
+ln -s /usr/local/lib/locum/sql/locum_init.sql /var/lib/mysql/locum_init.sql 
+chown mysql:mysql /var/lib/mysql/locum_init.sql
+mkdir /usr/local/etc
+mysqladmin -uroot -proot create scas
+echo "<?php $dsn = 'mysql://scasuser:scaspassword@localhost/scas';" > /usr/local/etc/scas.php
+
+(2) Install sphinx [http://thesocialopac.net/node/18]
+
+cd ~
+wget http://sphinxsearch.com/downloads/sphinx-0.9.9.tar.gz
+tar zxvf sphinx-0.9.9.tar.gz
+cd sphinx-0.9.9
+./configure --prefix=/usr/local/sphinx
+make
+make install
+
+mkdir /usr/local/sphinx/lib
+cp api/sphinxapi.php /usr/local/sphinx/lib/
+
+***NOTE: This user part doens't work on MAC, gotta figure something out here.  Fine if you're just developing since you don't need crontabs, just run sphinx as sudo
+echo "sphinx:x:999:999:Sphinx User,,,:/usr/local/sphinx/:/bin/true" >> /etc/passwd
+echo "sphinx:x:999:999:Sphinx User,,,:/usr/local/sphinx/:/bin/true" >> /etc/passwd-
+echo "sphinx:x:999:" >> /etc/group
+echo "sphinx:x:999:" >> /etc/group-
+
+***NOTE: start-stop-daemon doesn't work on Mac or CentOS without dpkg.  I just wrote my own custom start script from John's original, tell me if you get this working 
+mkdir /usr/local/sphinx/var/run
+chown -R sphinx.sphinx /usr/local/sphinx/var
+cd /etc/init.d
+wget http://www.thesocialopac.net/sites/thesocialopac.net/files/sphinx
+chmod +x /etc/init.d/sphinx
+
+ln -s /usr/local/sphinx/etc/sphinx.conf /usr/local/lib/locum/sphinx/sphinx.conf
+
+(3) Install Insurge -- [http://thesocialopac.net/node/15]
+
+mysql -u root -p < /usr/local/lib/insurge/sql/scas_insurge.sql
+# change parent_server to your own server
+
+(4) Install Locum -- [http://thesocialopac.net/node/14]
+
+mysql -u root -p < /usr/local/lib/locum/sql/scas_locum.sql
+mysql -uroot -p < /usr/local/lib/locum/sql/locum_university_init.sql #This item is new, adds additional university-specific information
+vim /etc/mysql/my.cnf
+ 	# Add to [mysqld]:
+ 	max_heap_table_size = 200M
+	init_file = /usr/local/lib/locum/sql/locum_init.sql
+vim /usr/local/lib/locum/config/locum.ini
+	# change [ils_config] -> ils_server
+  
+(5) Harvest [http://thesocialopac.net/node/17]
+chmod +x /usr/local/lib/locum/tools/harvest.php
+/usr/local/lib/locum/tools/harvest.php  
+
+#if this returns >0, continue
+mysql> SELECT COUNT(*) FROM locum_bib_items;
+
+chmod +x /usr/local/lib/insurge/tools/update-index.php
+ln -s /usr/local/lib/insurge/tools/update-index.php /etc/cron.hourly/locum
+
+/usr/local/sphinx/bin/indexer --all
+/etc/init.d/sphinx start
+
+(6) Maint scripts [http://thesocialopac.net/node/21]
+chmod +x /usr/local/lib/locum/tools/maint.php
+ln -s /usr/local/lib/locum/tools/maint.php /etc/cron.daily/locum
+ln -s /etc/init.d/sphinx /etc/rc2.d/S99-Sphinx
+  
+  
+Additional information
+-----------------------
+** When I get the MDB2 error, I just reset my whole database. [http://thesocialopac.net/node/14#comment-117]
+I created the following alias in ~/.profile 
+alias reset-scas="mysqladmin -uroot -proot drop scas && mysqladmin -uroot -proot create scas;mysql -uroot -proot < /usr/local/lib/insurge/sql/scas_insurge.sql;mysql -uroot -proot < /usr/local/lib/locum/sql/scas_locum.sql;mysql -uroot -proot < /usr/local/lib/locum/sql/locum_init.sql;mysql -uroot -proot < /usr/local/lib/locum/sql/locum_university_init.sql"    
+ 
