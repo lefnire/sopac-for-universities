@@ -22,6 +22,7 @@ $sortopts = array(
   'author' => t('Alphabetically by Author'),
   'top_rated' => t('Top Rated Items'),
   'format' => t('Format'),
+//  'collections' => t('Collections'),
   'loc_code' => t('Location'),
   'popular_week' => t('Most Popular this Week'),
   'popular_month' => t('Most Popular this Month'),

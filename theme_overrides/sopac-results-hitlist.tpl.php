@@ -56,7 +56,11 @@ if ($locum_result['cover_img'] && $locum_result['cover_img'] != 'CACHE') {
       </li>
 
       <li> <!-- ucsf custom stuff -->
-        <?php print 'Location: ' .$locum_result['availability']['items'][0]['location']; ?>
+        <?php 
+          echo '<div id="'.$locum_result['loc_code'].'">Location:  '
+               .( ($locum_result['loc_code']=='multi')? 'Multiple Locations' :$locum_result['availability']['items'][0]['location'] )
+           	   .'</div>';
+        ?>
       </li>
       <li>
       	<?php print 'Status: ' .$locum_result['availability']['items'][0]['statusmsg'];?>
@@ -82,7 +86,7 @@ if ($locum_result['cover_img'] && $locum_result['cover_img'] != 'CACHE') {
   ?>
   <td width="15%">
    <ul class="hitlist-format-icon">
-    <?php if(file_exists($ucsf_img = drupal_get_path('theme', 'acquia_prosper') . '/sopac_overrides/ucsf/' . $locum_result['mat_code'] . '.gif')){
+    <?php if(file_exists($ucsf_img = drupal_get_path('theme', 'acquia_prosper') . '/theme_overrides/ucsf/' . $locum_result['mat_code'] . '.gif')){
       print "<li>". theme('image', $ucsf_img) ."</li>"; 
     }else{ ?>
       <li><img src="<?php print '/' . drupal_get_path('module', 'sopac') . '/images/' . $locum_result['mat_code'] . '.png' ?>"></li>

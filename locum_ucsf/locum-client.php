@@ -174,6 +174,16 @@ class locum_client extends locum {
       case 'ztoa':
         $cl->SetSortMode(SPH_SORT_ATTR_DESC, 'title_ord');
         break;
+      case 'format':
+        $cl->SetSortMode(SPH_SORT_ATTR_ASC, 'mat_code');
+        break;
+        //TODO: not in database, add to sphinx.conf?  sopac-result.tpl.php & sopac-search-block.tpl.php, cit#2
+//      case 'collections':
+//        $cl->SetSortMode(SPH_SORT_ATTR_DESC, 'format_group');
+//        break;
+      case 'location':
+        $cl->SetSortMode(SPH_SORT_ATTR_DESC, 'loc_code');
+        break;
       default:
         if ($type == 'title') {
           // We get better results in title matches if we also rank by title length
