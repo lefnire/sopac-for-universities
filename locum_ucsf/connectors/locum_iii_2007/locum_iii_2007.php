@@ -100,74 +100,42 @@ class locum_iii_2007 {
     }
 
     // Process MARC fields
-
+    $marc = array();
+    foreach($this->locum_config['marc_codes'] as $key=>$value)
+      $marc[$key] = locum::csv_parser($value);
+      
     // Process Author information
-    $bib['author'] = '';
-    $author_arr = self::prepare_marc_values($bib_info_marc['100'], array('a','b','c','d'));
-    $bib['author'] = $author_arr[0];
-
-    // In no author info, we'll go for the 110 field
-    if (!$bib['author']) {
-      $author_110 = self::prepare_marc_values($bib_info_marc['110'], array('a'));
-      $bib['author'] = $author_110[0];
-    }
+    $bib['author'] = self::_prepare_marc_single( $bib_info_marc, $marc['author'], $marc['author_sub'] );
 
     // Additional author information
-    $bib['addl_author'] = '';
-    $addl_author = self::prepare_marc_values($bib_info_marc['700'], array('a','b','c','d'));
-    if (is_array($addl_author)) {
-      $bib['addl_author'] = serialize($addl_author);
-    }
-
-    // In no additional author info, we'll go for the 710 field
-    if (!$bib['addl_author']) {
-      $author_710 = self::prepare_marc_values($bib_info_marc['710'], array('a'));
-      if (is_array($author_710)) {
-        $bib['addl_author'] = serialize($author_710);
-      }
-    }
+    $bib['addl_author'] = self::_prepare_marc_single( $bib_info_marc, $marc['addl_author'], $marc['addl_author_sub'] );
 
     // Title information
-    $bib['title'] = '';
-    $title = self::prepare_marc_values($bib_info_marc['245'], array('a','b', 'c'));
-    if (substr($title[0], -1) == '/') { $title[0] = trim(substr($title[0], 0, -1)); }
-    $bib['title'] = trim($title[0]);
+    $title = self::_prepare_marc_single($bib_info_marc, $marc['title'], $marc['title_sub'] );
+    if (substr($title, -1) == '/') { $title = trim(substr($title, 0, -1)); }
+    $bib['title'] = trim($title);
 
     // TODO: 245 correct, check 'h'
     // Title medium information
     $bib['title_medium'] = '';
-    $title_medium = self::prepare_marc_values($bib_info_marc['245'], array('h'));
-    if ($title_medium[0]) {
-      if (preg_match('/\[(.*?)\]/', $title_medium[0], $medium_match)) {
+    $title_medium = self::_prepare_marc_single($bib_info_marc, $marc['title_medium'], $marc['title_medium_sub'] );
+    if ($title_medium) {
+      if (preg_match('/\[(.*?)\]/', $title_medium, $medium_match)) {
         $bib['title_medium'] = $medium_match[1];
       }
     }
-
     
     // Edition information
-    $bib['edition'] = '';
-    $edition = self::prepare_marc_values($bib_info_marc['250'], array('a'));
-    $bib['edition'] = trim($edition[0]);
+    $bib['edition'] = trim(self::_prepare_marc_single($bib_info_marc, $marc['edition'], $marc['edition_sub'] ));
 
-    // TODO: Unchecked
     // Series information
-    $bib['series'] = '';
-    $series = self::prepare_marc_values($bib_info_marc['490'], array('a','v'));
-    if (!$series[0]) { $series = self::prepare_marc_values($bib_info_marc['440'], array('a','v')); }
-    if (!$series[0]) { $series = self::prepare_marc_values($bib_info_marc['400'], array('a','v')); }
-    if (!$series[0]) { $series = self::prepare_marc_values($bib_info_marc['410'], array('a','v')); }
-    if (!$series[0]) { $series = self::prepare_marc_values($bib_info_marc['730'], array('a','v')); }
-    if (!$series[0]) { $series = self::prepare_marc_values($bib_info_marc['800'], array('a','v')); }
-    if (!$series[0]) { $series = self::prepare_marc_values($bib_info_marc['810'], array('a','v')); }
-    if (!$series[0]) { $series = self::prepare_marc_values($bib_info_marc['830'], array('a','v')); }
-    $bib['series'] = $series[0];
+    $bib['series'] = _prepare_marc_single($bib_info_marc, $marc['series'], $marc['series_sub'] );
 
     // Call number
     $callnum = '';
     // Journal callnum = 096a,b ; Book callnum = 050a,b, 90a,b
-    $call_marc_codes = array('099', '096', '090', '050');
     foreach($call_marc_codes as $call_marc_code){
-      $callnum_arr = self::prepare_marc_values($bib_info_marc[$call_marc_code], array('a', 'b'));
+      $callnum_arr = self::prepare_marc_values($bib_info_marc[$marc['callnum']], $marc['callnum_sub']);
       if (is_array($callnum_arr) && count($callnum_arr)) {
         foreach ($callnum_arr as $cn_sub) {
           $callnum .= $cn_sub . ' ';
@@ -177,25 +145,20 @@ class locum_iii_2007 {
     }
     $bib['callnum'] = trim($callnum);
   
-    //TODO: called 'Imprint' in tpl.phps
-    // Publication information
-    $bib['pub_info'] = '';
-    $pub_info = self::prepare_marc_values($bib_info_marc['260'], array('a','b','c'));
-    $bib['pub_info'] = $pub_info[0];
+    $bib['pub_info'] = self::_prepare_marc_single($bib_info_marc, $marc['pub_info'], $marc['pub_info_sub'] );
 
     
     // Publication year
     $bib['pub_year'] = '';
-    $pub_year = self::prepare_marc_values($bib_info_marc['260'], array('c'));
-    $c_arr = explode(',', $pub_year[0]);
+    $pub_year = self::_prepare_marc_single($bib_info_marc, $marc['pub_year'], $marc['pub_year_sub'] );
+    $c_arr = explode(',', $pub_year);
     $c_key = count($c_arr) - 1;
     $bib['pub_year'] = substr(ereg_replace("[^0-9]", '', $c_arr[$c_key]), -4);
 
     // ISBN / Std. number
     $bib['stdnum'] = '';
-    $stdnum_marc_codes = array('022', '020');
-    foreach ($stdnum_marc_codes as $stdnum_marc_code){
-      $stdnum = self::prepare_marc_values($bib_info_marc[$stdnum_marc_code], array('a'));
+    foreach ($mar['stdnum'] as $stdnum_marc_code){
+      $stdnum = self::_prepare_marc_single($bib_info_marc[$stdnum_marc_code], $marc['stdnum_sub']);
       if($stdnum){
         break;
       }elseif(is_array($stdnum)){ 
@@ -203,14 +166,10 @@ class locum_iii_2007 {
         $this_shouldnt_happen = TRUE;
       }
     }
+    $bib['stdnum'] = $stdnum;
     
-    $bib['stdnum'] = $stdnum[0];
-    
-    // TODO: Unchecked
     // UPC
-    $bib['upc'] = '';
-    $upc = self::prepare_marc_values($bib_info_marc['024'], array('a'));
-    $bib['upc'] = $upc[0];
+    $bib['upc'] = self::_prepare_marc_single($bib_info_marc[$marc['upc']], $marc['upc_sub']);
     if($bib['upc'] == '') { $bib['upc'] = "000000000000"; }
 
     // Grab the cover image URL if we're doing that
@@ -220,95 +179,72 @@ class locum_iii_2007 {
     }
 
     // LCCN (LC Card#)
-    $bib['lccn'] = '';
-    $lccn = self::prepare_marc_values($bib_info_marc['010'], array('a'));
-    $bib['lccn'] = $lccn[0];
+    $bib['lccn'] = self::_prepare_marc_single($bib_info_marc[$marc['lccn']], $marc['lccn_sub']);
     
     // Download Link (if it's a downloadable)
-    $bib['download_link'] = '';
-    $dl_link = self::prepare_marc_values($bib_info_marc['856'], array('u'));
-    $bib['download_link'] = $dl_link[0];
+    $bib['download_link'] = self::_prepare_marc_single($bib_info_marc[$marc['download_link']], $marc['download_link_sub']);
 
     // Description
-    //TODO Description = 300 310
-    $bib['descr'] = '';
-    $descr = self::prepare_marc_values($bib_info_marc['300'], array('a','b','c'));
-    $bib['descr'] = $descr[0];
+    //TODO: Make sure this is handled as multiple
+    $bib['descr'] = self::_prepare_marc_multiple($bib_info_marc[$marc['descr']], $marc['descr_sub']);
 
     // Notes
-    $notes = array();
-    $bib['notes'] = '';
-    $notes_tags = array('310', '362', '500', '504', '505','510', '511','520', '530', '550', '580');
-    foreach ($notes_tags as $notes_tag) {
-      $notes_arr = self::prepare_marc_values($bib_info_marc[$notes_tag], array('a', 'x'));
-      if (is_array($notes_arr)) {
-        foreach ($notes_arr as $notes_arr_val) {
-          array_push($notes, $notes_arr_val);
-        }
-      }
-    }
-    if (count($notes)) { $bib['notes'] = serialize($notes); }
+    $bib['notes'] = self::_prepare_marc_multiple($bib_info_marc[$marc['notes']], $marc['notes_sub']);
 
     // Subject headings
-    $subjects = array();
-    $subj_tags = array(
-      '600', '610', '611', '630', '650', '651', 
-      '653', '654', '655', '656', '657', '658', 
-      '690', '691', '692', '693', '694', '695',
-      '696', '697', '698', '699'
-    );
-    foreach ($subj_tags as $subj_tag) {
-      $subj_arr = self::prepare_marc_values($bib_info_marc[$subj_tag], array('a','b','c','d','e','v','x','y','z'), ' -- ');
-      if (is_array($subj_arr)) {
-        foreach ($subj_arr as $subj_arr_val) {
-          array_push($subjects, $subj_arr_val);
-        }
-      }
-    }
-    $bib['subjects'] = '';
-    if (count($subjects)) { $bib['subjects'] = $subjects; }
+    $bib['subjects'] = self::_prepare_marc_multiple($bib_info_marc[$marc['subjects']], $marc['subjects_sub'], '--', FALSE);
     
     /*-------- Additional university library items ----- */
 
+    $bib['holdings'] = self::_prepare_marc_multiple( $bib_info_marc, $marc['holdings'], $marc['holdings_sub'] );
+    $bib['continues'] = self::_prepare_marc_single( $bib_info_marc, $marc['continues'], $marc['continues_sub'] );
+    $bib['link'] = self::_prepare_marc_single( $bib_info_marc, $marc['link'], $marc['link_sub'] );
+    $bib['alt_title'] = self::_prepare_marc_multiple( $bib_info_marc, $marc['alt_title'], $marc['alt_title_sub'] );
+    $bib['related_work'] = self::_prepare_marc_single( $bib_info_marc, $marc['related_work'], $marc['related_work_sub'] ); 
+    $bib['local_note'] = self::_prepare_marc_multiple( $bib_info_marc, $marc['local_note'], $marc['local_note_sub'] );
 
-      /*Sample Data:
-      	Language	engEnglish	COPIES	2	Ongoing Resources Status	1ACTIVE
-        SKIP	0	CAT DATE	03-17-2008	SUPPRESS	0NO SUP JOURNAL
-        LOCATION	wr   ,pa, mb
-        LOCATION	multi	MAT TYPE	jEJOURNAL	COUNTRY	gw Germany, West
-        OCLC #	001	 	 	1751734
-        CONTINUES	780	tw
-        LINK	776tx
-        MARC	910 920(array) 007 008 035(array) 040cd 8563z
-        TODO: ALT TITLE	246(array) 222 210 793g
-        TODO: RELATED WRK	787txw
-        TODO: HOLDINGS	852bjz
-        TODO: LOCAL NOTE	069	996 997(array) 993 994
-      */
-      
-    // Additional Journal Information
-//  if($bib['mat_code']=='j'){
-    // Extra journal info, like holdings.  Assuming not specific to journals?
-//  }
-    
-      $holdings = array();
-      $holdings_tags = array('852', '866');
-      foreach ($holdings_tags as $holdings_tag) {
-        $holdings_arr = self::prepare_marc_values($bib_info_marc[$holdings_tag], array('a','b','j','3', 'z'));
-        if (is_array($holdings_arr)) {
-          foreach ($holdings_arr as $holdings_arr_val) {
-            array_push($holdings, $holdings_arr_val);
-          }
-        }
-      }
-      $bib['holdings'] = '';
-      if (count($holdings)) { $bib['holdings'] = $holdings; }
-      
-    
     /*-------- /Additional university library items ----- */
     
     unset($bib_info_marc);
     return $bib;
+  }
+  
+  /**
+   * Returns either the value at the MARC code, or '' if nothing
+   * @param array $bib_info_marc
+   * @param array $tags MARC codes to try.  If multiple codes, it will try them from left to right & return the first value it finds
+   * @param array $subfields MARC subfields
+   */
+  protected function _prepare_marc_single($bib_info_marc, $tags, $subfields, $delimiter = ' ', $first_val = TRUE){
+    foreach($tags as $tag){
+      $value = self::prepare_marc_values($bib_info_marc[$tag], $subfields, $delimiter);
+      if($value[0]) {
+        if($first_val) { return $value[0]; }
+        // otherwise, we want the whole array
+        else { return serialize($value); }
+      } // else try the next one
+    }
+    return '';
+  }
+  
+  /**
+   * Returns either the aggregate values at the MARC codes, or '' if nothing
+   * @param array $bib_info_marc
+   * @param array $tags MARC codes to aggregate
+   * @param array $subfields MARC subfields
+   */
+  protected function _prepare_marc_multiple($bib_info_marc, $tags, $subfields, $delimiter = ' ', $serialize=TRUE){
+    $arr = array();
+    foreach ($tags as $tag) {
+      $values = self::prepare_marc_values($bib_info_marc[$tag], $subfields, $delimiter);
+      if (is_array($values)) {
+        foreach ($values as $value) {
+          array_push($arr, $value);
+        }
+      }
+    }
+    if (count($arr)) { return $serialize? serialize($arr) : $arr; }
+    else { return ''; }
   }
 
   /**

@@ -22,12 +22,16 @@ USE scas;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `locum_bib_items_subject`
+-- Table structure for table `locum_bib_items_university`
 --
 
-CREATE TABLE IF NOT EXISTS `locum_bib_items_journal` (
+CREATE TABLE IF NOT EXISTS `locum_bib_items_university` (
   `bnum` int(12) NOT NULL,
-  `holdings` char(254) NOT NULL,
-  KEY `bnum` (`bnum`),
-  KEY `holdings` (`holdings`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Table for additional journal information for bib items';
+  `holdings` mediumtext,
+  `continues` mediumtext,
+  `link` mediumtext,
+  `alt_title` mediumtext,
+  `related_work` mediumtext,
+  `local_note` mediumtext,
+  KEY `bnum` (`bnum`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Table for additional university information for bib items';

@@ -124,28 +124,23 @@ class locum_server extends locum {
             }
           }
           
-          
           // Remember to run locum_university_init.sql          
-          // Import additional journal info ala Millennium's Journal module
-          if($bib['marc_code']=='j'){
+          // Import university info ala Millennium's Journal & Reserves modules
+//          if($bib['marc_code']=='j'){
             
-            //holdings
-            $journal = $bib['holdings'];
-            $bib_values['holdings'] = serialize($journal);
-            if (is_array($journal) && count($journal)) {
-              foreach ($journal as $journal_holding) {
-                $insert_data = array($bib['bnum'], $journal_holding);
-                $types = array('integer', 'text');
-                $sql_prep = $db->prepare('INSERT INTO locum_bib_items_journal VALUES (?, ?)', $types, MDB2_PREPARE_MANIP);
-                $affrows = $sql_prep->execute($insert_data);
-                $sql_prep->free();
-              }
+            $university=array();
+            $valid_vals = array('bnum', 'holdings', 'continues', 'link', 'alt_title', 'related_work', 'local_note');
+            foreach ($bib as $bkey => $bval) {
+              if (in_array($bkey, $valid_vals)) { $university[$bkey] = $bval; }
+            }
+            // Don't insert blank items
+            if($university['holdings'] || $university['continues'] || $university['link'] || $university['alt_title'] || $university['related_work'] || $university['local_note']){
+              $sql_prep = $db->prepare('INSERT INTO locum_bib_items_university VALUES (:bnum, :holdings, :continues, :link, :alt_title, :related_work, :local_note)');
+              $affrows = $sql_prep->execute($university);
+              $sql_prep->free();
             }
             
-          }
-          
-          
-          
+//        }
           
           
           $process_report['imported']++;
