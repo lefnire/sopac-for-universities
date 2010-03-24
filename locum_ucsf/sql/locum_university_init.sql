@@ -33,5 +33,6 @@ CREATE TABLE IF NOT EXISTS `locum_bib_items_university` (
   `alt_title` mediumtext,
   `related_work` mediumtext,
   `local_note` mediumtext,
+  `oclc` char(32),
   KEY `bnum` (`bnum`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Table for additional university information for bib items';

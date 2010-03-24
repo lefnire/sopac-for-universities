@@ -129,13 +129,13 @@ class locum_server extends locum {
 //          if($bib['marc_code']=='j'){
             
             $university=array();
-            $valid_vals = array('bnum', 'holdings', 'continues', 'link', 'alt_title', 'related_work', 'local_note');
+            $valid_vals = array('bnum', 'holdings', 'continues', 'link', 'alt_title', 'related_work', 'local_note', 'oclc');
             foreach ($bib as $bkey => $bval) {
               if (in_array($bkey, $valid_vals)) { $university[$bkey] = $bval; }
             }
             // Don't insert blank items
-            if($university['holdings'] || $university['continues'] || $university['link'] || $university['alt_title'] || $university['related_work'] || $university['local_note']){
-              $sql_prep = $db->prepare('INSERT INTO locum_bib_items_university VALUES (:bnum, :holdings, :continues, :link, :alt_title, :related_work, :local_note)');
+            if($university['holdings'] || $university['continues'] || $university['link'] || $university['alt_title'] || $university['related_work'] || $university['local_note'] || $university['oclc']){
+              $sql_prep = $db->prepare('INSERT INTO locum_bib_items_university VALUES (:bnum, :holdings, :continues, :link, :alt_title, :related_work, :local_note, :oclc)');
               $affrows = $sql_prep->execute($university);
               $sql_prep->free();
             }
@@ -696,6 +696,26 @@ class locum_server extends locum {
       $image_url = $this->get_amazon_image($stdnum, $api_cfg['amazon_access_key']);
     } else if ($api_cfg['use_syndetic_images']) {
       $image_url = $this->get_syndetic_image($stdnum, $api_cfg['syndetic_custid']);
+    }
+    return $image_url;
+  }
+  
+  /**
+   * UCSF gets more images here than through amazon or syndetics
+   * @param string $oclc the OCLC number for the bib item
+   */
+  public function get_oclc_cover_img($oclc){
+    // Format stdnum as best we can
+    $api_cfg = $this->locum_config['api_config'];
+    $image_url = '';
+    if ($api_cfg['use_oclc_images']) {
+      $url = "http://coverart.oclc.org/ImageWebSvc/oclc/+-+{$oclc}_70.jpg?SearchOrder=+-+AV,GO";
+      $oclc_dl = @file_get_contents($url);
+      list($version, $status_code, $msg) = explode(' ', $http_response_header[0], 3);
+      if ($status_code == '200') {
+        //TODO: Bad requests result in a white image, not a bad status_code.  Need to check against some API somehow
+        $image_url = $url;
+      }
     }
     return $image_url;
   }

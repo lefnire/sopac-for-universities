@@ -162,12 +162,6 @@ class locum_iii_2007 {
     $bib['upc'] = self::_prepare_marc_single($bib_info_marc, $marc['upc'], $marc['upc_sub']);
     if($bib['upc'] == '') { $bib['upc'] = "000000000000"; }
 
-    // Grab the cover image URL if we're doing that
-    $bib['cover_img'] = '';
-    if ($skip_cover != TRUE) {
-      if ($bib['stdnum']) { $bib['cover_img'] = locum_server::get_cover_img($bib['stdnum']); }
-    }
-
     // LCCN (LC Card#)
     $bib['lccn'] = self::_prepare_marc_single($bib_info_marc, $marc['lccn'], $marc['lccn_sub']);
     
@@ -192,8 +186,18 @@ class locum_iii_2007 {
     $bib['alt_title'] = self::_prepare_marc_multiple( $bib_info_marc, $marc['alt_title'], $marc['alt_title_sub'] );
     $bib['related_work'] = self::_prepare_marc_single( $bib_info_marc, $marc['related_work'], $marc['related_work_sub'] ); 
     $bib['local_note'] = self::_prepare_marc_multiple( $bib_info_marc, $marc['local_note'], $marc['local_note_sub'] );
+    $bib['oclc'] = self::_prepare_marc_single( $bib_info_marc, $marc['oclc'], $marc['oclc_sub'] );
 
     /*-------- /Additional university library items ----- */
+    
+  // Grab the cover image URL if we're doing that
+    $bib['cover_img'] = '';
+    if ($skip_cover != TRUE) {
+      static $locum;
+      $locum = new locum_server;
+      if ($bib['oclc']) { $bib['cover_img'] = $locum->get_oclc_cover_img($bib['oclc']); }
+      if ($bib['stdnum'] && !$bib['cover_img']) { $bib['cover_img'] = $locum->get_cover_img($bib['stdnum']); }
+    }
     
     unset($bib_info_marc);
     return $bib;
@@ -601,6 +605,10 @@ class locum_iii_2007 {
           $subfld = get_object_vars($bim_obj->MARCSUBFLD[$i]);
           $marc_sub[$marc_num][trim($subfld['SUBFIELDINDICATOR'])][$bim_item][] = trim($subfld['SUBFIELDDATA']);
         }
+      } else if ($bim_obj->MARCFIXDATA) {// 0 MARCSUBFLDs, as in OCLC# (http://ucsfcat.ucsf.edu:2082/xrecord=b1209053)
+        // TODO: Because MARCFIXDATA don't contain subfields, it is technically incorrect to assign it to 'a'
+        // however, it's the most convenient because of how the rest of the code works, so fix if it bothers you
+        $marc_sub[$marc_num]['a'][$bim_item] = (string) $bim_obj->MARCFIXDATA;
       }
       $bim_item++;
     }
