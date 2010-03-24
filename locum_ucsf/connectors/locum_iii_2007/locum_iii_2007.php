@@ -195,8 +195,8 @@ class locum_iii_2007 {
     if ($skip_cover != TRUE) {
       static $locum;
       $locum = new locum_server;
-      if ($bib['oclc']) { $bib['cover_img'] = $locum->get_oclc_cover_img($bib['oclc']); }
-      if ($bib['stdnum'] && !$bib['cover_img']) { $bib['cover_img'] = $locum->get_cover_img($bib['stdnum']); }
+      if ($bib['stdnum']) { $bib['cover_img'] = $locum->get_cover_img($bib['stdnum']); }
+      if ($bib['oclc'] && !$bib['cover_img']) { $bib['cover_img'] = $locum->get_oclc_cover_img($bib['oclc']); }
     }
     
     unset($bib_info_marc);
