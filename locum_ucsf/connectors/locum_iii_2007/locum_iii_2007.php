@@ -364,7 +364,7 @@ class locum_iii_2007 {
     $pdata['cardnum'] = $papi_data['PBARCODE'];
     $pdata['checkouts'] = $papi_data['CURCHKOUT'];
     $pdata['homelib'] = $papi_data['HOMELIBR'];
-    $pdata['balance'] = (float) preg_replace('%\$%s', '', $papi_data['MONEYOWED']);
+    $pdata['balance'] = preg_replace('/[^0-9.]/', '', $papi_data['MONEYOWED']);
     $pdata['expires'] = $papi_data['EXPDATE'] ? self::date_to_timestamp($papi_data['EXPDATE'], 2000) : NULL;
     $pdata['name'] = $papi_data['PATRNNAME'];
     $pdata['address'] = preg_replace('%\$%s', "\n", $papi_data['ADDRESS']);

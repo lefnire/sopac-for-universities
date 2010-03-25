@@ -623,7 +623,7 @@ class iiitools {
     for ($i=0; $i < $count; $i++) {
       $fines['items'][$i]['varname'] = trim($rawmatch[1][$i]);
       $fines['items'][$i]['desc'] = trim($rawmatch[3][$i]);
-      $fines['items'][$i]['amount'] = (float) trim($rawmatch[4][$i]);
+      $fines['items'][$i]['amount'] = preg_replace('/[^0-9.]/', '', $rawmatch[4][$i]);
     }
     return $fines;
   }
