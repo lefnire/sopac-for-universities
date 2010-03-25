@@ -719,7 +719,7 @@ class iiitools {
    * @param int $curl_timeout Timeout, in seconds, before cURL gives up curl_exec.  (optional).  Default: 6
    * @return array Array of parsed components from the cURL result as provided by parse_response()
    */
-  public function my_curl_exec($url_suffix, $postvars = NULL, $no_loop = FALSE, $curl_timeout = 6, $login_query = FALSE, $ssl = TRUE) {
+  public function my_curl_exec($url_suffix, $postvars = NULL, $no_loop = FALSE, $curl_timeout = 6, $login_query = FALSE, $ssl = FALSE) {
 
     $iii_url = $ssl ? $this->iii_server_info['sslurl'] : $this->iii_server_info['nosslurl'];
     $agent = "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.0.7-locum) Gecko/2009021906 Firefox/3.5.3";
