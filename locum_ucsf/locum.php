@@ -54,7 +54,14 @@ class locum {
     if (file_exists($script_dir . '/connectors/' . $connector_type . '/config/' . $connector_type . '.ini')) {
       $this->locum_config = array_merge($this->locum_config, parse_ini_file('connectors/' . $connector_type . '/config/' . $connector_type . '.ini', true));
     }
-    $this->locum_cntl->locum_config = $this->locum_config;
+    // Allow connector to set itself up using locum_config info,
+    // passing in $this so connector can use its methods.
+    if (method_exists($this->locum_cntl, 'init')) {
+    	$this->locum_cntl->init($this);
+    }
+    else {
+      $this->locum_cntl->locum_config = $this->locum_config;
+    }
   }
 
 
