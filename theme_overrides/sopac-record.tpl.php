@@ -105,9 +105,11 @@ if (sopac_prev_search_url(TRUE)) {
     if ($item['addl_author']) {
       print '<h3>Additional Credits</h3><ul>';
       $addl_author_arr = unserialize($item['addl_author']);
-      foreach ($addl_author_arr as $addl_author) {
-        $addl_author_link = '/' . $url_prefix . '/search/author/%22' . urlencode($addl_author) .'%22';
-        print '<li><a href="' . $addl_author_link . '">' . $addl_author . '</a></li>';
+      if(!empty($addl_author_arr)){
+        foreach ($addl_author_arr as $addl_author) {
+          $addl_author_link = '/' . $url_prefix . '/search/author/%22' . urlencode($addl_author) .'%22';
+          print '<li><a href="' . $addl_author_link . '">' . $addl_author . '</a></li>';
+        }
       }
       print '</ul>';
     }
