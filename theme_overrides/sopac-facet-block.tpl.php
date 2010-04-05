@@ -200,6 +200,30 @@ if ($decade_count) {
 	print "</ul></li>\n";
 }
 
+/* Uncomment for subjects facet
+$facet_subject = is_array($getvars['facet_subject']) ? $getvars['facet_subject'] : array();
+$subject_count = count($locum_result['facets']['subject']);
+if ($subject_count) {
+  if (!is_array($getvars['facet_subject'])) { $li_prop = ' class="closed"'; } 
+  else { $li_prop = NULL; }
+  print "<li$li_prop><span class=\"folder\">by Subject</span> <small>($subject_count)</small><ul>\n";
+  foreach ($locum_result['facets']['subject'] as $subject => $subject_code_count) {
+    if (in_array($subject, $facet_subject)) {
+      print '<li id="tree-kid" class="facet-item-selected"><strong>» ' . $subject . "</strong></li>\n";
+    }
+    else {
+      $getvars_tmp = $getvars;
+      $getvars_tmp['facet_subject'][] = urlencode($subject);
+      if (isset($getvars_tmp['page'])) { $getvars_tmp['page'] = ''; }
+      $link_addr = $uri . '?' . sopac_make_pagevars(sopac_parse_get_vars($getvars_tmp));
+      print '<li id="tree-kid">» <a href="' . $link_addr . '">' . $subject . '</a> <small>(' . $subject_code_count . ")</small></li>\n";
+      unset($getvars_tmp);
+    }
+  }
+  print "</ul></li>\n";
+}
+*/
+
 ?>        
     </ul>
   </div>

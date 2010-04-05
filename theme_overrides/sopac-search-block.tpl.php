@@ -208,6 +208,27 @@ if (is_array($getvars['facet_decade']) && count($getvars['facet_decade'])) {
 }
 ?>
 
+<?php
+/* Uncomment for subjects facet
+if (is_array($getvars['facet_subject']) && count($getvars['facet_subject'])) {
+  print '<br />Refined by Subject:';
+  print '<div class="search-block-attr">';
+  $subject_flipped = array_flip($getvars['facet_subject']);
+  foreach ($search['subject'] as $subject) {
+    $getvars_tmp = $getvars;
+    unset($getvars_tmp['facet_subject'][$subject_flipped[$subject]]);
+    $getvars_tmp['page'] = '';
+    $pvars_tmp = trim(sopac_make_pagevars(sopac_parse_get_vars($getvars_tmp)));
+    $gvar_indicator = $pvars_tmp ? '?' : '';
+    $rem_link = $uri . $gvar_indicator . $pvars_tmp;
+    $subject_arr[trim($subject)] = $subject . ' [<a href="' . $rem_link . '">x</a>]';
+  }
+  print implode('<br />', $subject_arr);
+  print '</div>';
+}
+*/
+?>
+
 <br />
 <div style="float: right;">» <a href="/research_help">Need help?</a></div>
 <?php if ($user->uid) {

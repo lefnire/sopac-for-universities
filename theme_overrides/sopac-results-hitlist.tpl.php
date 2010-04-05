@@ -38,8 +38,10 @@ if ($locum_result['cover_img'] && $locum_result['cover_img'] != 'CACHE') {
         <strong><a href="/<?php print $url_prefix . '/record/' . $locum_result['bnum'] ?>"><?php print ucwords($locum_result['title']);?></a></strong>
         <?php if ($locum_result['title_medium']) { print "[$locum_result[title_medium]]"; } ?>
       </li>
-      <li>
-        <?php print l($new_author_str, $url_prefix . '/search/author/' . urlencode($new_author_str));?>
+      <li><a href="/<?php print $url_prefix . 
+        '/search/author/' . 
+        urlencode($new_author_str) .
+        '">' . $new_author_str; ?></a>
       </li>
       <li><?php print $locum_result['pub_info']; ?></li>
       <?php if ($locum_result['callnum']) { 
