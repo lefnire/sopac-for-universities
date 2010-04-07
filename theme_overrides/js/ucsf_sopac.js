@@ -5,7 +5,7 @@ Drupal.behaviors.sopacCollapseLocationsTable = function (context) {
     var table = $("table#sopac-status-location");
     var rows = table.find("tr");
     
-    if(rows.length>1){
+    if( rows.length > (max_rows-1) ){
       var tbody = rows
         .slice(max_rows)
         .wrapAll("<tbody id='sopac-hidden-locations'></tbody>")

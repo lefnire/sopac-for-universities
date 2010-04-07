@@ -54,6 +54,14 @@ if (count($item_status['items'])) {
   }
 }
 
+
+//material image
+if(file_exists($ucsf_img = drupal_get_path('theme', 'ucsf_theme') . '/sopac/images/' . $item['mat_code'] . '.gif')){
+  $mat_image = theme('image', $ucsf_img); 
+}else{
+  $mat_image = theme('image', drupal_get_path('module', 'sopac') . '/images/' . $item['mat_code'] . '.png');
+} 
+
 if (sopac_prev_search_url(TRUE)) {
   print '<p><a href="' . sopac_prev_search_url() . '">&#171; Return to your search</a></p>';
 }
@@ -164,8 +172,9 @@ if (sopac_prev_search_url(TRUE)) {
     </h1>
 
     <!-- Item Format Icon -->
+    
     <ul class="item-format-icon">
-      <li><img src="<?php print '/' . drupal_get_path('module', 'sopac') . '/images/' . $item['mat_code'] . '.png' ?>"></li>
+      <li><?php print $mat_image; ?></li>
       <li style="margin-top: -2px;"><?php print wordwrap($locum_config['formats'][$item['mat_code']], 8, '<br />'); ?></li>
     </ul>
 

@@ -14,6 +14,13 @@ if ($locum_result['cover_img'] && $locum_result['cover_img'] != 'CACHE') {
 } else {
   $cover_img_url = '/' . drupal_get_path('module', 'sopac') . '/images/nocover.png';
 }
+
+//material image
+if(file_exists($ucsf_img = drupal_get_path('theme', 'ucsf_theme') . '/sopac/images/' . $locum_result['mat_code'] . '.gif')){
+  $mat_image = theme('image', $ucsf_img); 
+}else{
+  $mat_image = theme('image', drupal_get_path('module', 'sopac') . '/images/' . $locum_result['mat_code'] . '.png');
+}
 ?>
 <div class="hitlist-item">
 
@@ -87,11 +94,7 @@ if ($locum_result['cover_img'] && $locum_result['cover_img'] != 'CACHE') {
   ?>
   <td width="15%">
    <ul class="hitlist-format-icon">
-    <?php if(file_exists($ucsf_img = drupal_get_path('theme', 'acquia_prosper') . '/theme_overrides/ucsf/' . $locum_result['mat_code'] . '.gif')){
-      print "<li>". theme('image', $ucsf_img) ."</li>"; 
-    }else{ ?>
-      <li><img src="<?php print '/' . drupal_get_path('module', 'sopac') . '/images/' . $locum_result['mat_code'] . '.png' ?>"></li>
-    <?php } ?>
+    <li><?php print $mat_image; ?></li>
     <li style="margin-top: -2px;"><?php print wordwrap($locum_config['formats'][$locum_result['mat_code']], 8, '<br />'); ?></li>
   </ul>
 
