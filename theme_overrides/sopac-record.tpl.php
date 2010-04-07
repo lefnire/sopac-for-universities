@@ -196,14 +196,16 @@ if (sopac_prev_search_url(TRUE)) {
       }
 
       if (count($item_status['items']) && !$no_avail_mat_codes) {
-        print '<fieldset class="collapsible collapsed"><legend>Show All Copies (' . count($item_status['items']) . ')</legend>';
-        drupal_add_js('misc/collapse.js');
+//        print '<fieldset class="collapsible"><legend>Show All Copies (' . count($item_status['items']) . ')</legend>';
+//        drupal_add_js('misc/collapse.js');
+        drupal_add_js(drupal_get_path('theme', 'ucsf_theme').'/sopac/js/ucsf_sopac.js');
+        $attributes = array('id' => 'sopac-status-location');
         if (variable_get('sopac_multi_branch_enable', 0)) {
-          print theme('table', array("Location", "Call Number", "Branch", "Item Status"), $copy_status_array);
+          print theme('table', array("Location", "Call Number", "Branch", "Item Status"), $copy_status_array, $attributes);
         } else {
-          print theme('table', array("Location", "Call Number", "Item Status"), $copy_status_array);
+          print theme('table', array("Location", "Call Number", "Item Status"), $copy_status_array, $attributes);
         }
-        print '</fieldset>';
+//        print '</fieldset>';
       } else if ($item['download_link']) {
         print '<div class="item-request">';
         print '<p><a href="' . $item['download_link'] . '" target="_new">Download this Title</a></p>';

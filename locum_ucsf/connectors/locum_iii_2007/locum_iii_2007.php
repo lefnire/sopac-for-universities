@@ -53,7 +53,7 @@ class locum_iii_2007 {
 
     $bnum = trim($bnum);
 
-    $bnum=1201613; //debug course reserve
+    $bnum=1333757; //debug course reserve
     $xrecord = @simplexml_load_file($iii_server_info['nosslurl'] . '/xrecord=b' . $bnum);
 
     // If there is no record, return false (weeded or non-existent)
