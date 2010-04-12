@@ -53,7 +53,7 @@ class locum_iii_2007 {
 
     $bnum = trim($bnum);
 
-    $bnum=1333757; //debug course reserve
+    $bnum=1008699; //drugs of choice
     $xrecord = @simplexml_load_file($iii_server_info['nosslurl'] . '/xrecord=b' . $bnum);
 
     // If there is no record, return false (weeded or non-existent)
@@ -280,9 +280,16 @@ class locum_iii_2007 {
 
     $url = $iii_server_info['nosslurl'] . '/search~24/.b' . $bnum . '/.b' . $bnum . '/1,1,1,B/holdings~' . $bnum . '&FF=&1,0,';
     $avail_page_raw = utf8_encode(file_get_contents($url));
+    
+//    <tr class="bibItemsEntry">
+//    <td width="30%"><!-- field 1 -->&nbsp;<a href="http://www.library.ucsf.edu/locations/parnassus/floorplan/materials">Parnassus: Books - 4th Floor</a> 
+//    </td>
+//    <td width="45%"><!-- field C -->&nbsp;<a href="/search~S0?/cRM101+.D79/crm++101+d79/-3,-1,,B/browse">RM101 .D79</a> <!-- field v -->&nbsp;1958/59 <!-- field # --></td>
+//    <td width="25%"><!-- field % -->&nbsp;NOT CHCKD OUT </td></tr>
 
     // Holdings Regex
-    $regex_h = '%field 1 -->&nbsp;(.*?)</td>(.*?)browse">(.*?)</a>(.*?)field \% -->&nbsp;(.*?)</td>%s';
+    $regex_h = '%field 1 -->&nbsp;(.*?)</td>(.*?)browse">(.*?)</a>(.*?)\-->&nbsp;(.*?)<!-- (.*?)field \% -->&nbsp;(.*?)</td>%s';
+//    $regex_h = '%field 1 -->&nbsp;(.*?)</td>(.*?)browse">(.*?)</a>(.*?)field \% -->&nbsp;(.*?)</td>%s';
     preg_match_all($regex_h, $avail_page_raw, $matches);
 
     foreach ($matches[1] as $i => $location) {
@@ -290,7 +297,8 @@ class locum_iii_2007 {
       $location = trim($location);
       $loc_code = $loc_codes_flipped[$location];
       $call = str_replace("'", "&apos;", trim($matches[3][$i]));
-      $status = trim($matches[5][$i]);
+//      $status = trim($matches[5][$i]);
+      $status = trim($matches[7][$i]);
       $age = $default_age;
       $branch = $default_branch;
       
@@ -333,7 +341,7 @@ class locum_iii_2007 {
       $avail_array['items'][] = array(
         'location' => $location,
         'loc_code' => $loc_code,
-        'callnum' => $call,
+        'callnum' => $call .' '. trim($matches[5][$i]),
         'statusmsg' => $status,
         'due' => $due_date,
         'avail' => $avail,
