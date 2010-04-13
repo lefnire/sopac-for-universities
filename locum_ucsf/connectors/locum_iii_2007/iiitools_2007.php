@@ -615,7 +615,7 @@ class iiitools {
   * @return array of fine details
   */
   function parse_patron_fines($body) {
-    $regex = '%type="checkbox" name="selectedFees" value="(.+?)"(.+?)>(.+?)\$(.+?)<%s';
+    $regex = '%type="checkbox" name="selectedFees" value="(.+?)"(.+?)>(.+?)\$([0-9.,]+?) <%s';
     $fines = array();
     preg_match('%name="key" value="(.+?)"%s', $body, $keymatch);
     $fines['sessionkey'] = trim($keymatch[1]);
@@ -623,7 +623,7 @@ class iiitools {
     for ($i=0; $i < $count; $i++) {
       $fines['items'][$i]['varname'] = trim($rawmatch[1][$i]);
       $fines['items'][$i]['desc'] = trim($rawmatch[3][$i]);
-      $fines['items'][$i]['amount'] = preg_replace('/[^0-9.]/', '', $rawmatch[4][$i]);
+      $fines['items'][$i]['amount'] = (float) str_replace(',', '', $rawmatch[4][$i]); // remove ',' from values > $1000
     }
     return $fines;
   }

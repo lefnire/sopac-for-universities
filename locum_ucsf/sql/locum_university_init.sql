@@ -27,7 +27,6 @@ USE scas;
 
 CREATE TABLE IF NOT EXISTS `locum_bib_items_university` (
   `bnum` int(12) NOT NULL,
-  `holdings` mediumtext,
   `continues` mediumtext,
   `link` mediumtext,
   `alt_title` mediumtext,

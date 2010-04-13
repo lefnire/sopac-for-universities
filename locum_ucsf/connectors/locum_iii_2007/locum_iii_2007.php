@@ -180,7 +180,6 @@ class locum_iii_2007 {
     
     /*-------- Additional university library items ----- */
 
-    $bib['holdings'] = self::_prepare_marc_multiple( $bib_info_marc, $marc['holdings'], $marc['holdings_sub'] );
     $bib['continues'] = self::_prepare_marc_single( $bib_info_marc, $marc['continues'], $marc['continues_sub'] );
     $bib['link'] = self::_prepare_marc_single( $bib_info_marc, $marc['link'], $marc['link_sub'] );
     $bib['alt_title'] = self::_prepare_marc_multiple( $bib_info_marc, $marc['alt_title'], $marc['alt_title_sub'] );
