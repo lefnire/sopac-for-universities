@@ -39,7 +39,28 @@ class locum_iii_2007 {
   public function __construct() {
     require_once('patronapi.php');
   }
-
+  
+  //TODO: delete me
+  public function get_all_marcs($xrecord){
+    static $marcs = array();
+    static $count=0;
+    if($count++ >= 500){
+      variable_set('marc_subs', $marcs);
+      exit;
+    }
+    foreach($xrecord->VARFLD as $varfld){
+      foreach($varfld->MARCSUBFLD as $subfield){
+        $tag = (string)$varfld->HEADER->TAG;
+        $marc = (string)$varfld->MARCINFO->MARCTAG;
+        $sub = (string)$subfield->SUBFIELDINDICATOR;
+        if( !(isset($marcs[$tag])) ) 
+          $marcs[$tag]=array();
+        if( !(isset($marcs[$tag][$marc])) )
+          $marcs[$tag][$marc]=array();
+        $marcs[$tag][$marc][$sub] = $sub;
+      }
+    }
+  }
   /**
    * Grabs bib info from XRECORD and returns it in a Locum-ready array.
    *
@@ -53,7 +74,7 @@ class locum_iii_2007 {
 
     $bnum = trim($bnum);
 
-    $bnum=1008699; //drugs of choice
+//    $bnum=1008699; //drugs of choice
     $xrecord = @simplexml_load_file($iii_server_info['nosslurl'] . '/xrecord=b' . $bnum);
 
     // If there is no record, return false (weeded or non-existent)
@@ -67,6 +88,9 @@ class locum_iii_2007 {
     } else {
       return 'skip';
     }
+    
+    //TODO: delete me
+    $this->get_all_marcs($xrecord);
 
     $bib_info_record = $xrecord->RECORDINFO;
     $bib_info_local = $xrecord->TYPEINFO->BIBLIOGRAPHIC->FIXFLD;
