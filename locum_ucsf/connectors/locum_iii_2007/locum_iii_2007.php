@@ -44,9 +44,8 @@ class locum_iii_2007 {
   public function get_all_marcs($xrecord){
     static $marcs = array();
     static $count=0;
-    if($count++ >= 500){
+    if($count++ >= 1000){
       variable_set('marc_subs', $marcs);
-      exit;
     }
     foreach($xrecord->VARFLD as $varfld){
       foreach($varfld->MARCSUBFLD as $subfield){
@@ -132,7 +131,7 @@ class locum_iii_2007 {
     $bib['author'] = self::_prepare_marc_single( $bib_info_marc, $marc['author'], $marc['author_sub'] );
 
     // Additional author information
-    $bib['addl_author'] = self::_prepare_marc_single( $bib_info_marc, $marc['addl_author'], $marc['addl_author_sub'] );
+    $bib['addl_author'] = self::_prepare_marc_single( $bib_info_marc, $marc['alt_author'], $marc['alt_author_sub'] );
 
     // Title information
     $title = self::_prepare_marc_single($bib_info_marc, $marc['title'], $marc['title_sub'] );
@@ -158,8 +157,8 @@ class locum_iii_2007 {
     // Call number
     $callnum = '';
     // Journal callnum = 096a,b ; Book callnum = 050a,b, 90a,b
-    foreach($marc['callnum'] as $call_marc_code){
-      $callnum_arr = self::prepare_marc_values($bib_info_marc[$call_marc_code], $marc['callnum_sub']);
+    foreach($marc['call_#'] as $call_marc_code){
+      $callnum_arr = self::prepare_marc_values($bib_info_marc[$call_marc_code], $marc['call_#_sub']);
       if (is_array($callnum_arr) && count($callnum_arr)) {
         foreach ($callnum_arr as $cn_sub) {
           $callnum .= $cn_sub . ' ';
@@ -169,7 +168,7 @@ class locum_iii_2007 {
     }
     $bib['callnum'] = trim($callnum);
   
-    $bib['pub_info'] = self::_prepare_marc_single($bib_info_marc, $marc['pub_info'], $marc['pub_info_sub'] );
+    $bib['pub_info'] = self::_prepare_marc_single($bib_info_marc, $marc['imprint'], $marc['imprint_sub'] );
 
     
     // Publication year
@@ -180,36 +179,37 @@ class locum_iii_2007 {
     $bib['pub_year'] = substr(ereg_replace("[^0-9]", '', $c_arr[$c_key]), -4);
 
     // ISBN / Std. number
-    $bib['stdnum'] = self::_prepare_marc_single($bib_info_marc, $marc['stdnum'], $marc['stdnum_sub']);
+    $bib['stdnum'] = self::_prepare_marc_single($bib_info_marc, $marc['isbn_issn'], $marc['isbn_issn_sub']);
     
     // UPC
     $bib['upc'] = self::_prepare_marc_single($bib_info_marc, $marc['upc'], $marc['upc_sub']);
     if($bib['upc'] == '') { $bib['upc'] = "000000000000"; }
 
     // LCCN (LC Card#)
-    $bib['lccn'] = self::_prepare_marc_single($bib_info_marc, $marc['lccn'], $marc['lccn_sub']);
+    $bib['lccn'] = self::_prepare_marc_single($bib_info_marc, $marc['lc_card_#'], $marc['lc_card_#_subs']);
     
     // Download Link (if it's a downloadable)
     $bib['download_link'] = self::_prepare_marc_single($bib_info_marc, $marc['download_link'], $marc['download_link_sub']);
 
     // Description
     //TODO: Make sure this is handled as multiple
-    $bib['descr'] = self::_prepare_marc_single($bib_info_marc, $marc['descr'], $marc['descr_sub']);
+    $bib['descr'] = self::_prepare_marc_single($bib_info_marc, $marc['descript'], $marc['descript_sub']);
 
     // Notes
-    $bib['notes'] = self::_prepare_marc_multiple($bib_info_marc, $marc['notes'], $marc['notes_sub']);
+    $bib['notes'] = self::_prepare_marc_multiple($bib_info_marc, $marc['note'], $marc['note_sub']);
 
     // Subject headings
-    $bib['subjects'] = self::_prepare_marc_multiple($bib_info_marc, $marc['subjects'], $marc['subjects_sub'], '--', FALSE);
+    $bib['subjects'] = self::_prepare_marc_multiple($bib_info_marc, $marc['subject'], $marc['subject_sub'], '--', FALSE);
     
     /*-------- Additional university library items ----- */
 
     $bib['continues'] = self::_prepare_marc_single( $bib_info_marc, $marc['continues'], $marc['continues_sub'] );
     $bib['link'] = self::_prepare_marc_single( $bib_info_marc, $marc['link'], $marc['link_sub'] );
     $bib['alt_title'] = self::_prepare_marc_multiple( $bib_info_marc, $marc['alt_title'], $marc['alt_title_sub'] );
-    $bib['related_work'] = self::_prepare_marc_single( $bib_info_marc, $marc['related_work'], $marc['related_work_sub'] ); 
+    $bib['related_work'] = self::_prepare_marc_single( $bib_info_marc, $marc['related_wrk'], $marc['related_wrk_sub'] ); 
     $bib['local_note'] = self::_prepare_marc_multiple( $bib_info_marc, $marc['local_note'], $marc['local_note_sub'] );
     $bib['oclc'] = self::_prepare_marc_single( $bib_info_marc, $marc['oclc'], $marc['oclc_sub'] );
+    // left over: marc, doc_number, holdings, cont_d_by, __note__, hldgs_stat
 
     /*-------- /Additional university library items ----- */
     
