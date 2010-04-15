@@ -129,13 +129,18 @@ class locum_server extends locum {
 //          if($bib['marc_code']=='j'){
             
             $university=array();
-            $valid_vals = array('bnum', 'continues', 'link', 'alt_title', 'related_work', 'local_note', 'oclc');
+            $valid_vals = array('bnum', 'continues', 'link', 'alt_title', 'related_work', 'local_note', 'oclc', 'doc_number', 'holdings', 'cont_d_by', '__note__', 'hldgs_stat');
+            $not_empty = false;
             foreach ($bib as $bkey => $bval) {
-              if (in_array($bkey, $valid_vals)) { $university[$bkey] = $bval; }
+              if (in_array($bkey, $valid_vals)) {
+                $university[$bkey] = $bval;
+                if($bval && $bkey!='bnum') { $not_empty = true; } // don't insert blank items, and bnum doesn't count
+              }
             }
             // Don't insert blank items
-            if($university['continues'] || $university['link'] || $university['alt_title'] || $university['related_work'] || $university['local_note'] || $university['oclc']){
-              $sql_prep = $db->prepare('INSERT INTO locum_bib_items_university VALUES (:bnum, :continues, :link, :alt_title, :related_work, :local_note, :oclc)');
+            if($not_empty){
+              $implode = implode(', :', array_keys($valid_vals));
+              $sql_prep = $db->prepare('INSERT INTO locum_bib_items_university VALUES (:'. implode(', :', $valid_vals) .')');
               $affrows = $sql_prep->execute($university);
               $sql_prep->free();
             }

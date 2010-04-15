@@ -44,7 +44,7 @@ class locum_iii_2007 {
   public function get_all_marcs($xrecord){
     static $marcs = array();
     static $count=0;
-    if($count++ >= 1000){
+    if($count++ >= 100){
       variable_set('marc_subs', $marcs);
     }
     foreach($xrecord->VARFLD as $varfld){
@@ -209,7 +209,13 @@ class locum_iii_2007 {
     $bib['related_work'] = self::_prepare_marc_single( $bib_info_marc, $marc['related_wrk'], $marc['related_wrk_sub'] ); 
     $bib['local_note'] = self::_prepare_marc_multiple( $bib_info_marc, $marc['local_note'], $marc['local_note_sub'] );
     $bib['oclc'] = self::_prepare_marc_single( $bib_info_marc, $marc['oclc'], $marc['oclc_sub'] );
+    
     // left over: marc, doc_number, holdings, cont_d_by, __note__, hldgs_stat
+    $bib['doc_number'] = self::_prepare_marc_single( $bib_info_marc, $marc['doc_number'], $marc['doc_number_sub'] );
+    $bib['holdings'] = self::_prepare_marc_single( $bib_info_marc, $marc['holdings'], $marc['holdings_sub'] );
+    $bib['cont_d_by'] = self::_prepare_marc_single( $bib_info_marc, $marc['cont_d_by'], $marc['cont_d_by_sub'] );
+    $bib['__note__'] = self::_prepare_marc_single( $bib_info_marc, $marc['__note__'], $marc['__note___sub'] );
+    $bib['hldgs_stat'] = self::_prepare_marc_single( $bib_info_marc, $marc['hldgs_stat'], $marc['hldgs_stat_sub'] );
 
     /*-------- /Additional university library items ----- */
     
@@ -220,6 +226,18 @@ class locum_iii_2007 {
       $locum = new locum_server;
       if ($bib['stdnum']) { $bib['cover_img'] = $locum->get_cover_img($bib['stdnum']); }
       if ($bib['oclc'] && !$bib['cover_img']) { $bib['cover_img'] = $locum->get_oclc_cover_img($bib['oclc']); }
+    }
+
+    //TODO: remove me (find the largest items, so i can determind the type of database column for each)
+    static $largest_marc = array();
+    foreach($bib as $bkey => $bval){
+      $length = strlen($bval);
+      if(!$largest_marc[$bkey]) {$largest_marc[$bkey] = $length;}
+      elseif ($largest_marc[$bkey]<$length) {$largest_marc[$bkey]=$length;}
+    }
+    static $count=0;
+    if($count++ >= 500){
+      variable_set('largest_marc', $largest_marc);
     }
     
     unset($bib_info_marc);
