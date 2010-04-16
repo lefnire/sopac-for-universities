@@ -27,16 +27,16 @@ USE scas;
 
 CREATE TABLE IF NOT EXISTS `locum_bib_items_university` (
   `bnum` int(12) NOT NULL,
-  `continues` mediumtext, /*120*/
-  `link` mediumtext, /*96*/
+  `continues` mediumtext, /*223*/
+  `link` mediumtext, /*132*/
   `alt_title` mediumtext, /*507*/
-  `related_work` mediumtext,
-  `local_note` mediumtext, /*182*/
-  `oclc` char(12),
-  `doc_number` varchar(128), /*21*/
-  `holdings` mediumtext, /*129*/
-  `cont_d_by` mediumtext, /*63*/
-  `__note__` mediumtext, /*129*/
-  `hldgs_stat` varchar(128), /*33*/
+  `related_work` mediumtext, /*104*/
+  `local_note` mediumtext, /*303*/
+  `oclc` char(12), /*9*/
+  `doc_number` varchar(128), /*32*/
+  `holdings` mediumtext, /*184*/
+  `cont_d_by` mediumtext, /*343*/
+  `__note__` mediumtext, /*184*/
+  `hldgs_stat` varchar(128), /*53*/
   KEY `bnum` (`bnum`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Table for additional university information for bib items';

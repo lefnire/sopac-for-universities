@@ -212,10 +212,10 @@ class locum_iii_2007 {
     
     // left over: marc, doc_number, holdings, cont_d_by, __note__, hldgs_stat
     $bib['doc_number'] = self::_prepare_marc_single( $bib_info_marc, $marc['doc_number'], $marc['doc_number_sub'] );
-    $bib['holdings'] = self::_prepare_marc_single( $bib_info_marc, $marc['holdings'], $marc['holdings_sub'] );
-    $bib['cont_d_by'] = self::_prepare_marc_single( $bib_info_marc, $marc['cont_d_by'], $marc['cont_d_by_sub'] );
-    $bib['__note__'] = self::_prepare_marc_single( $bib_info_marc, $marc['__note__'], $marc['__note___sub'] );
-    $bib['hldgs_stat'] = self::_prepare_marc_single( $bib_info_marc, $marc['hldgs_stat'], $marc['hldgs_stat_sub'] );
+    $bib['holdings'] = self::_prepare_marc_multiple( $bib_info_marc, $marc['holdings'], $marc['holdings_sub'] );
+    $bib['cont_d_by'] = self::_prepare_marc_multiple( $bib_info_marc, $marc['cont_d_by'], $marc['cont_d_by_sub'] );
+    $bib['__note__'] = self::_prepare_marc_multiple( $bib_info_marc, $marc['__note__'], $marc['__note___sub'] );
+    $bib['hldgs_stat'] = self::_prepare_marc_multiple( $bib_info_marc, $marc['hldgs_stat'], $marc['hldgs_stat_sub'] );
 
     /*-------- /Additional university library items ----- */
     
