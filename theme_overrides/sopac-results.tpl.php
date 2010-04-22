@@ -12,23 +12,7 @@ $uri = $uri_arr[0];
 $uri = $_GET['q'];
 
 $perpage = $result_info['limit'];
-$sortopts = array(
-  '' => t('Relevance'),
-  'atoz' => t('Alphabetical A to Z'),
-  'ztoa' => t('Alphabetical Z to A'),
-  'catalog_newest' => t('Just Added'),
-  'newest' => t('Pub date: Newest'),
-  'oldest' => t('Pub date: Oldest'),
-  'author' => t('Alphabetically by Author'),
-  'top_rated' => t('Top Rated Items'),
-  'format' => t('Format'),
-//  'collections' => t('Collections'),
-  'loc_code' => t('Location'),
-  'popular_week' => t('Most Popular this Week'),
-  'popular_month' => t('Most Popular this Month'),
-  'popular_year' => t('Most Popular this Year'),
-  'popular_total' => t('All Time Most Popular'),
-);
+$sortopts = sopac_search_form_sortopts();
 $default_perpage = variable_get('sopac_results_per_page', 10);
 
 ?>
