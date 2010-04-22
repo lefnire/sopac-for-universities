@@ -2,10 +2,10 @@
 <?php
 
 // You'll need to change these:
-$first_record = 1246762; //<-- [journal], Annals of hematology, we want 852 & 866
-//$last_record = 1346762;
-//$first_record = 1000000;
-$last_record = 14408363;
+//$first_record = 1246762; //<-- [journal], Annals of hematology, we want 852 & 866
+//$last_record =  1346762;
+$first_record = 1000000;
+$last_record =  1440836;
 $large_record_split = 10;
 
 // Init scripts, library locations, and binaries

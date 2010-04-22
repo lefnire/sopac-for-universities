@@ -45,7 +45,7 @@ class locum_iii_2007 {
     static $marcs = array();
     static $count=0;
     if($count++ >= 100){
-      variable_set('marc_subs', $marcs);
+//      variable_set('marc_subs', $marcs);
     }
     foreach($xrecord->VARFLD as $varfld){
       foreach($varfld->MARCSUBFLD as $subfield){
@@ -203,10 +203,10 @@ class locum_iii_2007 {
     
     /*-------- Additional university library items ----- */
 
-    $bib['continues'] = self::_prepare_marc_single( $bib_info_marc, $marc['continues'], $marc['continues_sub'] );
+    $bib['continues'] = self::_prepare_marc_multiple( $bib_info_marc, $marc['continues'], $marc['continues_sub'] );
     $bib['link'] = self::_prepare_marc_single( $bib_info_marc, $marc['link'], $marc['link_sub'] );
     $bib['alt_title'] = self::_prepare_marc_multiple( $bib_info_marc, $marc['alt_title'], $marc['alt_title_sub'] );
-    $bib['related_work'] = self::_prepare_marc_single( $bib_info_marc, $marc['related_wrk'], $marc['related_wrk_sub'] ); 
+    $bib['related_work'] = self::_prepare_marc_multiple( $bib_info_marc, $marc['related_wrk'], $marc['related_wrk_sub'] ); 
     $bib['local_note'] = self::_prepare_marc_multiple( $bib_info_marc, $marc['local_note'], $marc['local_note_sub'] );
     $bib['oclc'] = self::_prepare_marc_single( $bib_info_marc, $marc['oclc'], $marc['oclc_sub'] );
     
@@ -237,7 +237,7 @@ class locum_iii_2007 {
     }
     static $count=0;
     if($count++ >= 500){
-      variable_set('largest_marc', $largest_marc);
+//      variable_set('largest_marc', $largest_marc);
     }
     
     unset($bib_info_marc);

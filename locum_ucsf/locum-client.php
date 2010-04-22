@@ -624,6 +624,8 @@ class locum_client extends locum {
    * @return array Bib item information
    */
   public function get_bib_item($bnum, $get_inactive = FALSE) {
+    $class = __CLASS__;
+    $function = __FUNCTION__;
     if (is_callable(array(__CLASS__ . '_hook', __FUNCTION__))) {
       eval('$hook = new ' . __CLASS__ . '_hook;');
       return $hook->{__FUNCTION__}($bnum);
@@ -637,7 +639,12 @@ class locum_client extends locum {
     } else {
       $sql = "SELECT * FROM locum_bib_items WHERE bnum = '$bnum' AND active = '1' LIMIT 1";
     }
-    $res = $db->query($sql);
+   if ($get_inactive) {
+      $sql = "SELECT * FROM locum_bib_items b LEFT JOIN locum_bib_items_university u ON b.bnum=u.bnum WHERE b.bnum = '$bnum' LIMIT 1";
+    } else {
+      $sql = "SELECT * FROM locum_bib_items b LEFT JOIN locum_bib_items_university u ON b.bnum=u.bnum WHERE b.bnum = '$bnum' AND active = '1' LIMIT 1";
+    }
+    $res= $db->query($sql);
     $item_arr = $res->fetchAll(MDB2_FETCHMODE_ASSOC);
     $db->disconnect();
     $item_arr[0]['stdnum'] = preg_replace('/[^\d]/','', $item_arr[0]['stdnum']);
