@@ -291,29 +291,31 @@ if (sopac_prev_search_url(TRUE)) {
     ?>
 
     <!-- Community / SOPAC Reviews -->
-    <div id="item-reviews">
-      <h2>Community Reviews</h2>
-      <?php
-      if (count($rev_arr)) {
-        foreach ($rev_arr as $rev_item) {
-          print '<div class="hreview">';
-          print '<h3 class="summary"><a href="/review/view/' . $rev_item['rev_id'] . '" class="fn url">' . $rev_item['rev_title'] . '</a></h3>';
-          if ($rev_item['uid']) {
-            $rev_user = user_load(array('uid' => $rev_item['uid']));
-            print '<p class="review-byline">submitted by <span class="review-author"><a href="/review/user/' . $rev_item['uid'] . '">' . $rev_user->name . '</a> on <abbr class="dtreviewed" title="' . date("c", $rev_item['timestamp']) . '">' . date("F j, Y, g:i a", $rev_item['timestamp']) . '</abbr></span>';
-            if ($user->uid == $rev_item['uid']) {
-              print ' &nbsp; [ <a title="Delete this review" href="/review/delete/' . $rev_item['rev_id'] . '?ref=' . urlencode($_SERVER['REQUEST_URI']) . '">delete</a> ] [ <a title="Edit this review" href="/review/edit/' . $rev_item['rev_id'] . '?ref=' . urlencode($_SERVER['REQUEST_URI']) . '">edit</a> ]';
+    <?php if (variable_get('sopac_social_enable', 1)) : ?>
+      <div id="item-reviews">
+        <h2>Community Reviews</h2>
+        <?php
+        if (count($rev_arr)) {
+          foreach ($rev_arr as $rev_item) {
+            print '<div class="hreview">';
+            print '<h3 class="summary"><a href="/review/view/' . $rev_item['rev_id'] . '" class="fn url">' . $rev_item['rev_title'] . '</a></h3>';
+            if ($rev_item['uid']) {
+              $rev_user = user_load(array('uid' => $rev_item['uid']));
+              print '<p class="review-byline">submitted by <span class="review-author"><a href="/review/user/' . $rev_item['uid'] . '">' . $rev_user->name . '</a> on <abbr class="dtreviewed" title="' . date("c", $rev_item['timestamp']) . '">' . date("F j, Y, g:i a", $rev_item['timestamp']) . '</abbr></span>';
+              if ($user->uid == $rev_item['uid']) {
+                print ' &nbsp; [ <a title="Delete this review" href="/review/delete/' . $rev_item['rev_id'] . '?ref=' . urlencode($_SERVER['REQUEST_URI']) . '">delete</a> ] [ <a title="Edit this review" href="/review/edit/' . $rev_item['rev_id'] . '?ref=' . urlencode($_SERVER['REQUEST_URI']) . '">edit</a> ]';
+              }
+              print '</p>';
             }
-            print '</p>';
+            print '<div class="review-body description">' . nl2br($rev_item['rev_body']) . '</div></div>';
           }
-          print '<div class="review-body description">' . nl2br($rev_item['rev_body']) . '</div></div>';
+        } else {
+          print '<p>No reviews have been written yet.  You could be the first!</p>';
         }
-      } else {
-        print '<p>No reviews have been written yet.  You could be the first!</p>';
-      }
-      print $rev_form ? $rev_form : '<p><a href="/user/login?destination=' . $_SERVER['REQUEST_URI'] . '">Login</a> to write a review of your own.</p>';
-      ?>
-    </div>
+        print $rev_form ? $rev_form : '<p><a href="/user/login?destination=' . $_SERVER['REQUEST_URI'] . '">Login</a> to write a review of your own.</p>';
+        ?>
+      </div>
+    <?php endif; ?>
 
     <!-- Google Books Preview -->
     <div id="item-google-books">
