@@ -96,7 +96,7 @@ if (sopac_prev_search_url(TRUE)) {
     <!-- Item Details -->
     <ul>
       <?php
-      if ($item['pub_info']) { print '<li><b>Published:</b> ' . $item['pub_info'] . '</li>';  }
+      if ($item['pub_info']) { print '<li><b>Publisher:</b> ' . $item['pub_info'] . '</li>';  }
       if ($item['pub_year']) { print '<li><b>Year Published:</b> ' . $item['pub_year'] . '</li>';  }
       if ($item['series']) { print '<li><b>Series:</b> <a href="/' . 
                            $url_prefix . '/search/series/' . urlencode($series) . '">' . $item['series'] . '</a></li>';  }
@@ -261,17 +261,19 @@ if (sopac_prev_search_url(TRUE)) {
         }        
         return $str.'</li>';
       }
-    
+      
+      
+      //see node/31
       if($item['continues'])    { print print_serial('Continues', $item['continues']);}
-      if($item['link'])         { print print_serial('Link', $item['link']); }
+//      if($item['link'])         { print print_serial('Link', $item['link']); }
       if($item['alt_title'])    { print print_serial('Alt Title', $item['alt_title']); }
       if($item['related_work']) { print print_serial('Related Work', $item['related_work']); }
       if($item['local_note'])   { print print_serial('Local Notes', $item['local_note']); }
       if($item['oclc'])         { print print_serial('OCLC', $item['oclc']); }
       if($item['doc_number'])   { print print_serial('Doc Number', $item['doc_number']); }
-      if($item['holdings'])     { print print_serial('Holdings', $item['holdings']); }
+//      if($item['holdings'])     { print print_serial('Holdings', $item['holdings']); }
       if($item['cont_d_by'])    { print print_serial('Continued By', $item['cont_d_by']); }
-      if($item['__note__'])     { print print_serial('* NOTE *', $item['__note__']); }
+//      if($item['__note__'])     { print print_serial('* NOTE *', $item['__note__']); }
       if($item['hldgs_stat'])   { print print_serial('Holdings Status', $item['hldgs_stat']); }
     ?>
     </ul>
