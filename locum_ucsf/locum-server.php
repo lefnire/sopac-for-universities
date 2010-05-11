@@ -704,26 +704,6 @@ class locum_server extends locum {
     }
     return $image_url;
   }
-  
-  /**
-   * UCSF gets more images here than through amazon or syndetics
-   * @param string $oclc the OCLC number for the bib item
-   */
-  public function get_oclc_cover_img($oclc){
-    // Format stdnum as best we can
-    $api_cfg = $this->locum_config['api_config'];
-    $image_url = '';
-    if ($api_cfg['use_oclc_images']) {
-      $url = "http://coverart.oclc.org/ImageWebSvc/oclc/+-+{$oclc}_70.jpg?SearchOrder=+-+AV,GO";
-      $oclc_dl = @file_get_contents($url);
-      list($version, $status_code, $msg) = explode(' ', $http_response_header[0], 3);
-      if ($status_code == '200') {
-        //TODO: Bad requests result in a white image, not a bad status_code.  Need to check against some API somehow
-        $image_url = $url;
-      }
-    }
-    return $image_url;
-  }
 
   /**
    * Used by get_cover_img to get the Amazon cover image URL.
