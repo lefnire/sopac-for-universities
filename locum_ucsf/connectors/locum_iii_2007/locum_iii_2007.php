@@ -74,6 +74,7 @@ class locum_iii_2007 {
     $bnum = trim($bnum);
 
 //    $bnum=1008699; //drugs of choice
+    $bnum=1315907; // Clinical neuroanatomy
     $xrecord = @simplexml_load_file($iii_server_info['nosslurl'] . '/xrecord=b' . $bnum);
 
     // If there is no record, return false (weeded or non-existent)
@@ -225,7 +226,14 @@ class locum_iii_2007 {
       static $locum;
       $locum = new locum_server;
       if ($bib['stdnum']) { $bib['cover_img'] = $locum->get_cover_img($bib['stdnum']); }
-      if ($bib['oclc'] && !$bib['cover_img']) { $bib['cover_img'] = $locum->get_oclc_cover_img($bib['oclc']); }
+      if ($bib['oclc'] && !$bib['cover_img']) {
+      	
+      	// Fall back on worldcat, we're using phpQuery library so no regex required
+      	require_once('tools/phpQuery/phpQuery/phpQuery.php'); // jQuery-like screen scraping library
+        phpQuery::browserGet('http://ucsf.worldcat.org/oclc/'.$bib['oclc'], array($this, 'get_worldcat_cover_img'));
+        // see comment on instance var for explaination
+        $bib['cover_img'] = $this->bibItems['cover_img']; 
+      }
     }
 
     //TODO: remove me (find the largest items, so i can determind the type of database column for each)
@@ -242,6 +250,15 @@ class locum_iii_2007 {
     
     unset($bib_info_marc);
     return $bib;
+  }
+  
+  /** 
+  * using phpQuery here to retrieve the cover image.  We need an instance variable because this function returns
+  * a Zend_Http_Client rather than a phpQuery object (aka, return $browser['image.cover']->attr('src') does nothing)
+  */
+  public $bibItems;
+  public function get_worldcat_cover_img($browser) {
+  	$this->bibItems['cover_img'] = $browser['img.cover']->attr('src');
   }
   
   /**
