@@ -11,6 +11,7 @@ $url_prefix = variable_get('sopac_url_prefix', 'cat/seek');
 
 if ($locum_result['cover_img'] && $locum_result['cover_img'] != 'CACHE') {
   $cover_img_url = $locum_result['cover_img'];
+  $cover_img_url = str_replace('_140.jpg', '_170.jpg', $cover_img_url); // if using worldcat, use the thumbnail image instead of large
 } else {
   $cover_img_url = '/' . drupal_get_path('module', 'sopac') . '/images/nocover.png';
 }
@@ -21,6 +22,8 @@ if(file_exists($ucsf_img = drupal_get_path('theme', 'ucsf_theme') . '/sopac/imag
 }else{
   $mat_image = theme('image', drupal_get_path('module', 'sopac') . '/images/' . $locum_result['mat_code'] . '.png');
 }
+
+$locum_result['title'] = truncate_utf8($locum_result['title'], 150, TRUE, TRUE); // truncate really huge titles
 ?>
 <div class="hitlist-item">
 

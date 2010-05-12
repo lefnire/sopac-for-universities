@@ -37,6 +37,7 @@ class locum_iii_2007 {
    * Prep this class
    */
   public function __construct() {
+    require_once('tools/phpQuery/phpQuery/phpQuery.php'); // jQuery-like screen scraping library
     require_once('patronapi.php');
   }
   
@@ -74,7 +75,7 @@ class locum_iii_2007 {
     $bnum = trim($bnum);
 
 //    $bnum=1008699; //drugs of choice
-    $bnum=1315907; // Clinical neuroanatomy
+//    $bnum=1330465; // Clinical neuroanatomy
     $xrecord = @simplexml_load_file($iii_server_info['nosslurl'] . '/xrecord=b' . $bnum);
 
     // If there is no record, return false (weeded or non-existent)
@@ -229,7 +230,6 @@ class locum_iii_2007 {
       if ($bib['oclc'] && !$bib['cover_img']) {
       	
       	// Fall back on worldcat, we're using phpQuery library so no regex required
-      	require_once('tools/phpQuery/phpQuery/phpQuery.php'); // jQuery-like screen scraping library
         phpQuery::browserGet('http://ucsf.worldcat.org/oclc/'.$bib['oclc'], array($this, 'get_worldcat_cover_img'));
         // see comment on instance var for explaination
         $bib['cover_img'] = $this->bibItems['cover_img']; 
@@ -337,13 +337,12 @@ class locum_iii_2007 {
     }
 
     $url = $iii_server_info['nosslurl'] . '/search~24/.b' . $bnum . '/.b' . $bnum . '/1,1,1,B/holdings~' . $bnum . '&FF=&1,0,';
-    $avail_page_raw = utf8_encode(file_get_contents($url));
+    // NOTE not using SOPAC's defalut regex-way of scraping item status, we're using our own method with phpQuery.  Leaving the old code here
+    // for reference
+//    return ucsf_scrape_status($url);
     
-//    <tr class="bibItemsEntry">
-//    <td width="30%"><!-- field 1 -->&nbsp;<a href="http://www.library.ucsf.edu/locations/parnassus/floorplan/materials">Parnassus: Books - 4th Floor</a> 
-//    </td>
-//    <td width="45%"><!-- field C -->&nbsp;<a href="/search~S0?/cRM101+.D79/crm++101+d79/-3,-1,,B/browse">RM101 .D79</a> <!-- field v -->&nbsp;1958/59 <!-- field # --></td>
-//    <td width="25%"><!-- field % -->&nbsp;NOT CHCKD OUT </td></tr>
+    
+    $avail_page_raw = utf8_encode(file_get_contents($url));
 
     // Holdings Regex
     $regex_h = '%field 1 -->&nbsp;(.*?)</td>(.*?)browse">(.*?)</a>(.*?)\-->&nbsp;(.*?)<!-- (.*?)field \% -->&nbsp;(.*?)</td>%s';
@@ -411,6 +410,25 @@ class locum_iii_2007 {
     return $avail_array;
 
   }
+  
+ public function ucsf_scrape_status($url){
+    /*	<tr  class="bibItemsEntry">
+		<td width="30%" ><!-- field 1 -->&nbsp;<a href="http://www.library.ucsf.edu/locations/parnassus/floorplan/materials">Parnassus: Books - 4th Floor</a> 
+		</td>
+		<td width="45%" ><!-- field C -->&nbsp;<a href="/search~S0?/cRC905+.I5+1967/crc++905+i5+1967/-3,-1,,B/browse">RC905 .I5 1967</a> <!-- field v --><!-- field # --></td>
+		<td width="25%" ><!-- field % -->&nbsp;NOT CHCKD OUT </td></tr>*/
+    $browser = null;
+    $browserCallback = new CallbackParameterToReference($browser);
+    phpQuery::browserGet($url, $browserCallback);
+    if ($browser) {
+      $q_context = $browser
+//      	->WebBrowser($browserCallback)
+      	->find('tr.bibItemsEntry');
+      $q_location = $browser->find('td:eq(0) a', $q_context)->htmlOuter();
+      $q_callnum = $browser->find('td:eq(1) a', $q_context)->htmlOuter();
+      $q_status = $browser->find('td:eq(2)', $q_context)->text();
+     }
+ } 
   
   /**
    * Returns an array of patron information
