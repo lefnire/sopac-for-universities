@@ -353,9 +353,15 @@ class locum_iii_2007 {
 		</td>
 		<td width="45%" ><!-- field C -->&nbsp;<a href="/search~S0?/cRC905+.I5+1967/crc++905+i5+1967/-3,-1,,B/browse">RC905 .I5 1967</a> <!-- field v --><!-- field # --></td>
 		<td width="25%" ><!-- field % -->&nbsp;NOT CHCKD OUT </td></tr>*/
-      	$location = $browser->find('td:eq(0) a', $row)->attr('target', '_blank')->htmlOuter();
-        $call = $browser->find('td:eq(1) a', $row)->attr('target', '_blank')->parent('td')->html();
-          $call = str_replace('href="/', 'href="http://ucsfcat.ucsf.edu/', $call);
+      	$location = $browser->find('td:eq(0)', $row);
+      	  $location->find('a')->attr('target', '_blank');
+      	  $location = $location->html();
+        $call = $browser->find('td:eq(1)', $row);
+          $call->find('a')
+            ->attr('target', '_blank')
+            ->attr('href', 'http://ucsfcat.ucsf.edu'.$call->find('a')->attr('href'));
+          $call = $call->html();
+//          $call = str_replace('href="/', 'href="http://ucsfcat.ucsf.edu/', $call);
         $status = $browser->find('td:eq(2)', $row)->text();
         
         
