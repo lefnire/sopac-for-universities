@@ -80,7 +80,7 @@ if (sopac_prev_search_url(TRUE)) {
         print $cover_img;
     } else {
         $cover_img_url = ($item['cover_img'] && $locum_result['cover_img'] != 'CACHE') ? $item['cover_img'] : '/' . drupal_get_path('module', 'sopac') . '/images/nocover.png';
-        print '<img class="item-cover" width="200" src="' . $cover_img_url . '" />';
+        print '<img class="item-cover" width="152" src="' . $cover_img_url . '" />';
     }
     ?>
 
@@ -233,10 +233,27 @@ if (sopac_prev_search_url(TRUE)) {
     <?php
     if (is_array($note_arr)) {
       print '<div id="item-notes">';
-      print '<h2>Additional Details</h2>';
+      print '<h2>Notes</h2>';
       foreach($note_arr as $note) {
         print '<p>' . $note . '</p>';
       }
+      print '</div>';
+    }
+    ?>
+    
+    <!-- Subject Headings -->
+    <?php
+    if ($item['alt_title']) {
+      print '<div id="alt-titles">';
+      print '<h2>Alternative Titles</h2><p><ul>';
+      $alt_titles = unserialize($item['alt_title']);
+      if (is_array($alt_titles)) {
+        foreach ($alt_titles as $alt_title) {
+          $alt_title_url = '/' . $url_prefix . '/search/title/%22' . urlencode($alt_title) . '%22';
+          print '<li><a href="' . $alt_title_url. '">' . $alt_title . '</a></li>';
+        }
+      }
+      print '</ul></p>';
       print '</div>';
     }
     ?>
@@ -266,7 +283,6 @@ if (sopac_prev_search_url(TRUE)) {
       //see node/31
       if($item['continues'])    { print print_serial('Continues', $item['continues']);}
 //      if($item['link'])         { print print_serial('Link', $item['link']); }
-      if($item['alt_title'])    { print print_serial('Alt Title', $item['alt_title']); }
       if($item['related_work']) { print print_serial('Related Work', $item['related_work']); }
       if($item['local_note'])   { print print_serial('Local Notes', $item['local_note']); }
       if($item['oclc'])         { print print_serial('OCLC', $item['oclc']); }

@@ -38,7 +38,7 @@ $locum_result['title'] = truncate_utf8($locum_result['title'], 150, TRUE, TRUE);
     if (module_exists('covercache')) {
       print $cover_img;
     } else { ?>
-      <img class="hitlist-cover" width="100" src="<?php print $cover_img_url; ?>">
+      <img class="hitlist-cover" width="70" src="<?php print $cover_img_url; ?>">
     <?php } ?>
     </a>
     </td>
