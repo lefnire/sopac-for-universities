@@ -69,7 +69,7 @@ $locum_result['title'] = truncate_utf8($locum_result['title'], 150, TRUE, TRUE);
       </li>
       <?php
       if (!in_array($locum_result['loc_code'], $no_circ)) {
-        print '<li class="item-request"><strong>» ' . sopac_put_request_link($locum_result['bnum']) . '</strong></li>';
+        print '<li class="item-request"><strong>' . sopac_put_request_link($locum_result['bnum']) . '</strong></li>';
       }
       ?>
     </ul>
