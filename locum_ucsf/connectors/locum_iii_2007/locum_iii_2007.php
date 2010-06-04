@@ -140,7 +140,6 @@ class locum_iii_2007 {
     if (substr($title, -1) == '/') { $title = trim(substr($title, 0, -1)); }
     $bib['title'] = trim($title);
 
-    // TODO: 245 correct, check 'h'
     // Title medium information
     $bib['title_medium'] = '';
     $title_medium = self::_prepare_marc_single($bib_info_marc, $marc['title_medium'], $marc['title_medium_sub'] );
@@ -194,7 +193,6 @@ class locum_iii_2007 {
     $bib['download_link'] = self::_prepare_marc_single($bib_info_marc, $marc['download_link'], $marc['download_link_sub']);
 
     // Description
-    //TODO: Make sure this is handled as multiple
     $bib['descr'] = self::_prepare_marc_single($bib_info_marc, $marc['descript'], $marc['descript_sub']);
 
     // Notes
@@ -214,6 +212,9 @@ class locum_iii_2007 {
     
     // left over: marc, doc_number, holdings, cont_d_by, __note__, hldgs_stat
     $bib['doc_number'] = self::_prepare_marc_single( $bib_info_marc, $marc['doc_number'], $marc['doc_number_sub'] );
+    
+    //TODO: store holdings as an array rather than string, so we can parse later.
+    // something like [ 0=>[ a=>'UCSF', b=>'jnrl', j=>'W1 GU 821', 3=>'v.1(1960)-v.53(2004)' ] ]  
     $bib['holdings'] = self::_prepare_marc_multiple( $bib_info_marc, $marc['holdings'], $marc['holdings_sub'] );
     $bib['cont_d_by'] = self::_prepare_marc_multiple( $bib_info_marc, $marc['cont_d_by'], $marc['cont_d_by_sub'] );
     $bib['__note__'] = self::_prepare_marc_multiple( $bib_info_marc, $marc['__note__'], $marc['__note___sub'] );

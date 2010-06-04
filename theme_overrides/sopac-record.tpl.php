@@ -307,7 +307,7 @@ if (sopac_prev_search_url(TRUE)) {
       if($item['local_note'])   { print print_serial('Local Notes', $item['local_note']); }
       if($item['oclc'])         { print print_serial('OCLC', $item['oclc']); }
       if($item['doc_number'])   { print print_serial('Doc Number', $item['doc_number']); }
-//      if($item['holdings'])     { print print_serial('Holdings', $item['holdings']); }
+      if($item['holdings'])     { print print_serial('Holdings', $item['holdings']); }
       if($item['cont_d_by'])    { print print_serial('Continued By', $item['cont_d_by']); }
 //      if($item['__note__'])     { print print_serial('* NOTE *', $item['__note__']); }
       if($item['hldgs_stat'])   { print print_serial('Holdings Status', $item['hldgs_stat']); }
@@ -371,6 +371,9 @@ if (sopac_prev_search_url(TRUE)) {
           </script>
       </div>
     </div>
+    <?php 
+      $test=1;
+    ?>
 
   <!-- end right-hand column -->
   </div>
