@@ -19,7 +19,8 @@ ln -s $SOPAC/insurge /usr/local/lib/insurge
 ln -s $SOPAC/locum_ucsf /usr/local/lib/locum
 mkdir /usr/local/etc
 ln -s $SOPAC/scas.php /usr/local/etc/scas.php
-ln -s $SOPAC/locum_ucsf/sql/locum_init.sql /var/lib/mysql/locum_init.sql 
+# symlink doesn't work for locum_init.sql due to mysql:mysql permission, must physically reside in /var/lib/mysql
+cp $SOPAC/locum_ucsf/sql/locum_init.sql /var/lib/mysql/locum_init.sql 
 chown mysql:mysql /var/lib/mysql/locum_init.sql
 
 -----------------
@@ -35,6 +36,8 @@ mkdir /usr/local/sphinx
 ln -s /var/lib/sphinxsearch/ /usr/local/sphinx/lib
 ln -s /var/lib/sphinxsearch/ /usr/local/sphinx/var
 ln -s /etc/sphinxsearch/ /usr/local/sphinx/etc
+ln -s /usr/bin/ /usr/local/sphinx/bin
+ln -s /etc/init.d/sphinxsearch /etc/init.d/sphinx
 ln -s $SOPAC/locum_ucsf/sphinx/sphinx.conf /usr/local/sphinx/etc/sphinx.conf
 
 -----------------
@@ -47,7 +50,7 @@ mysqladmin -uroot -proot create scas
 vim /etc/mysql/my.cnf
   # Add to [mysqld]:
   max_heap_table_size = 200M
-  init_file = /usr/local/lib/locum/sql/locum_init.sql
+  init_file = /var/lib/mysql/locum_init.sql
 
 # Initialize database, you might want to put this script in your ~/.profile
 alias reset-scas="mysqladmin -uroot -proot drop scas && mysqladmin -uroot -proot create scas;mysql -uroot -proot < /usr/local/lib/insurge/sql/scas_insurge.sql;mysql -uroot -proot < /usr/local/lib/locum/sql/scas_locum.sql;mysql -uroot -proot < /usr/local/lib/locum/sql/locum_init.sql;mysql -uroot -proot < /usr/local/lib/locum/sql/locum_university_init.sql"    
