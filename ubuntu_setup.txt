@@ -1,4 +1,7 @@
-These are the steps I took to get SOPAC working on my Mac, will vary depending on your machine. 
+These are instructions for setting up sopac-for-universities on ubuntu 10.4.  I put all the SOPAC libraries in on directory, and I'm using 
+symlinks to point here from locations that SOPAC expects (/usr/local/lib/locum, etc).  Makes things more manageable, and more version-controllable.
+Also, some files were added to the mix so you don't have to download them separately (like sphinxapi.php).
+
 -----------------
 (1)
 # Run as root.  Otherwise "sudo" comes before every line"
@@ -17,21 +20,22 @@ pear install MDB2_Driver_mysql
 
 ln -s $SOPAC/insurge /usr/local/lib/insurge
 ln -s $SOPAC/locum_ucsf /usr/local/lib/locum
-mkdir /usr/local/etc
 ln -s $SOPAC/scas.php /usr/local/etc/scas.php
 # symlink doesn't work for locum_init.sql due to mysql:mysql permission, must physically reside in /var/lib/mysql
 cp $SOPAC/locum_ucsf/sql/locum_init.sql /var/lib/mysql/locum_init.sql 
 chown mysql:mysql /var/lib/mysql/locum_init.sql
 
 -----------------
-(4) Install sphinx [http://thesocialopac.net/node/18]
+(4) Install sphinx
 
-sudo aptitude install sphinxsearch
+# I'm using ubuntu's sphinxsearch package rather than compiling from source.  I like this better because it sets up init.d scripts and user/groups 
+# the way ubuntu wants it.  Because you can't apt-get install with --prefix=x, we'll have to set symlinks 
+
+aptitude install sphinxsearch
 
 # note, this came from the downloaded package at http://www.sphinxsearch.com/downloads/sphinx-0.9.8.1.tar.gz
 ln -s $SOPAC/locum_ucsf/sphinx/sphinxapi.php /var/lib/sphinxsearch/sphinxapi.php
 
-# sopac wants sphinx configured with prefix /usr/local/sphinx, but we're letting ubuntu handle the installation, so we'll set symlinks
 mkdir /usr/local/sphinx
 ln -s /var/lib/sphinxsearch/ /usr/local/sphinx/lib
 ln -s /var/lib/sphinxsearch/ /usr/local/sphinx/var
