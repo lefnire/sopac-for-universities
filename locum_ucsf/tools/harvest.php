@@ -1,4 +1,4 @@
-#!/Applications/MAMP/bin/php5/bin/php -q
+#!/usr/bin/php -q
 <?php
 
 // You'll need to change these:
@@ -10,7 +10,7 @@ $large_record_split = 10;
 
 // Init scripts, library locations, and binaries
 $locum_lib_dir = '/usr/local/lib/locum';
-$mysql_init_script = '/Applications/MAMP/bin/stopMysql.sh && /Applications/MAMP/bin/startMysql.sh #';
+$mysql_init_script = '/etc/init.d/mysql';
 $sphinx_init_script = '/etc/init.d/sphinx';
 $sphinx_indexer = '/usr/local/sphinx/bin/indexer';
 
