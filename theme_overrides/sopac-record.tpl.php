@@ -1,4 +1,7 @@
 <?php
+
+// see https://spreadsheets.google.com/ccc?key=0AtLAcO_9VGLPdGd1Zk9JajdsSGxIZzYzb3VNZ1o0anc&hl=en&pli=1#gid=0
+
 /*
  * Item record display template
  */
@@ -217,10 +220,11 @@ if (sopac_prev_search_url(TRUE)) {
       <h2>Where To Find It</h2>
       <?php
       if ($item_status['callnums']) {
-				print '<p>Call number: <strong>' . $item['callnum'] . '</strong></p>';
+        print '<p>Call number: <strong>' . $item['callnum'] . '</strong></p>';
 //        print '<p>Call number: <strong>' . implode(", ", $item_status['callnums']) . '</strong></p>';
       }
 
+      if ( (count($item_status['items']) && !$no_avail_mat_codes) || $item['download_link'] || $item['holdings'] ){
       if (count($item_status['items']) && !$no_avail_mat_codes) {
 //        print '<div><fieldset class="collapsible collapsed"><legend>Show All Copies (' . count($item_status['items']) . ')</legend><div>';
         drupal_add_js(drupal_get_path('theme', 'ucsf_theme').'/sopac/js/ucsf_sopac.js');
@@ -233,10 +237,20 @@ if (sopac_prev_search_url(TRUE)) {
         }
 //        print '</div></fieldset></div>';
       }
-      elseif ($item['download_link']) {
-        print '<div class="item-request">';
-        print '<p>' . l(t('Download this Title'), $item['download_link'], array('attributes' => array('target' => '_new'))) . '</p>';
-        print '</div>';
+      if ($item['download_link']) {
+//        print '<div class="item-request">';
+//        print '<p>' . l(t('Download this Title'), $item['download_link'], array('attributes' => array('target' => '_new'))) . '</p>';
+//        print '</div>';
+          print "<h3>Download this Title</h3>";
+          print $item['download_link'];
+      }
+      
+      
+      //TODO: holdings and links should come from the marc record, temporarily screen-scraping. screen-scrape (see locum_iii_2007[352])
+      print "<table>{$item_status['holdings_html']}</table>";
+      
+      
+      
       }
       else {
         if (!$no_avail_mat_codes) {
@@ -307,10 +321,12 @@ if (sopac_prev_search_url(TRUE)) {
       if($item['local_note'])   { print print_serial('Local Notes', $item['local_note']); }
       if($item['oclc'])         { print print_serial('OCLC', $item['oclc']); }
       if($item['doc_number'])   { print print_serial('Doc Number', $item['doc_number']); }
-      if($item['holdings'])     { print print_serial('Holdings', $item['holdings']); }
       if($item['cont_d_by'])    { print print_serial('Continued By', $item['cont_d_by']); }
 //      if($item['__note__'])     { print print_serial('* NOTE *', $item['__note__']); }
-      if($item['hldgs_stat'])   { print print_serial('Holdings Status', $item['hldgs_stat']); }
+      if($item['hldgs_stat'])   { 
+        //what is this?
+        print print_serial('Holdings Status', $item['hldgs_stat']); 
+      }
     ?>
     </ul>
     </div>

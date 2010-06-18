@@ -526,6 +526,7 @@ class locum_client extends locum {
     $result['callnums'] = array();
     $result['ages'] = array();
     $result['branches'] = array();
+    $result['holdings_html'] = $status['holdings_html'];
     $loc_codes = array();
     if (count($status['items'])) {
       foreach ($status['items'] as $item) {

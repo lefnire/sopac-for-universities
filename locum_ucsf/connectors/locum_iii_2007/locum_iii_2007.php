@@ -76,6 +76,7 @@ class locum_iii_2007 {
 
 //    $bnum=1008699; //drugs of choice
 //    $bnum=1330465; // Clinical neuroanatomy
+//    $bnum=1186294; // gut
     $xrecord = @simplexml_load_file($iii_server_info['nosslurl'] . '/xrecord=b' . $bnum);
 
     // If there is no record, return false (weeded or non-existent)
@@ -190,24 +191,25 @@ class locum_iii_2007 {
     $bib['lccn'] = self::_prepare_marc_single($bib_info_marc, $marc['lc_card_#'], $marc['lc_card_#_subs']);
     
     // Download Link (if it's a downloadable)
-    $bib['download_link'] = self::_prepare_marc_single($bib_info_marc, $marc['download_link'], $marc['download_link_sub']);
+    $bib['download_link'] = self::_prepare_marc_array($bib_info_marc, $marc['download_link'], $marc['download_link_sub'], ' ', true);
 
     // Description
     $bib['descr'] = self::_prepare_marc_single($bib_info_marc, $marc['descript'], $marc['descript_sub']);
 
     // Notes
-    $bib['notes'] = self::_prepare_marc_multiple($bib_info_marc, $marc['note'], $marc['note_sub']);
+    $bib['notes'] = self::_prepare_marc_array($bib_info_marc, $marc['note'], $marc['note_sub']);
 
     // Subject headings
-    $bib['subjects'] = self::_prepare_marc_multiple($bib_info_marc, $marc['subject'], $marc['subject_sub'], '--', FALSE);
+    $subj = self::_prepare_marc_array($bib_info_marc, $marc['subject'], $marc['subject_sub'], '--');
+    $bib['subjects'] = unserialize($subj); // see why: locum-server.php[109]
     
     /*-------- Additional university library items ----- */
 
-    $bib['continues'] = self::_prepare_marc_multiple( $bib_info_marc, $marc['continues'], $marc['continues_sub'] );
+    $bib['continues'] = self::_prepare_marc_array( $bib_info_marc, $marc['continues'], $marc['continues_sub'] );
     $bib['link'] = self::_prepare_marc_single( $bib_info_marc, $marc['link'], $marc['link_sub'] );
-    $bib['alt_title'] = self::_prepare_marc_multiple( $bib_info_marc, $marc['alt_title'], $marc['alt_title_sub'] );
-    $bib['related_work'] = self::_prepare_marc_multiple( $bib_info_marc, $marc['related_wrk'], $marc['related_wrk_sub'] ); 
-    $bib['local_note'] = self::_prepare_marc_multiple( $bib_info_marc, $marc['local_note'], $marc['local_note_sub'] );
+    $bib['alt_title'] = self::_prepare_marc_array( $bib_info_marc, $marc['alt_title'], $marc['alt_title_sub'] );
+    $bib['related_work'] = self::_prepare_marc_array( $bib_info_marc, $marc['related_wrk'], $marc['related_wrk_sub'] ); 
+    $bib['local_note'] = self::_prepare_marc_array( $bib_info_marc, $marc['local_note'], $marc['local_note_sub'] );
     $bib['oclc'] = self::_prepare_marc_single( $bib_info_marc, $marc['oclc'], $marc['oclc_sub'] );
     
     // left over: marc, doc_number, holdings, cont_d_by, __note__, hldgs_stat
@@ -215,10 +217,10 @@ class locum_iii_2007 {
     
     //TODO: store holdings as an array rather than string, so we can parse later.
     // something like [ 0=>[ a=>'UCSF', b=>'jnrl', j=>'W1 GU 821', 3=>'v.1(1960)-v.53(2004)' ] ]  
-    $bib['holdings'] = self::_prepare_marc_multiple( $bib_info_marc, $marc['holdings'], $marc['holdings_sub'] );
-    $bib['cont_d_by'] = self::_prepare_marc_multiple( $bib_info_marc, $marc['cont_d_by'], $marc['cont_d_by_sub'] );
-    $bib['__note__'] = self::_prepare_marc_multiple( $bib_info_marc, $marc['__note__'], $marc['__note___sub'] );
-    $bib['hldgs_stat'] = self::_prepare_marc_multiple( $bib_info_marc, $marc['hldgs_stat'], $marc['hldgs_stat_sub'] );
+    $bib['holdings'] = self::_prepare_marc_array( $bib_info_marc, $marc['holdings'], $marc['holdings_sub'], ' ', true);
+    $bib['cont_d_by'] = self::_prepare_marc_array( $bib_info_marc, $marc['cont_d_by'], $marc['cont_d_by_sub'] );
+    $bib['__note__'] = self::_prepare_marc_array( $bib_info_marc, $marc['__note__'], $marc['__note___sub'] );
+    $bib['hldgs_stat'] = self::_prepare_marc_array( $bib_info_marc, $marc['hldgs_stat'], $marc['hldgs_stat_sub'] );
 
     /*-------- /Additional university library items ----- */
     
@@ -231,9 +233,9 @@ class locum_iii_2007 {
       if ($bib['oclc'] && !$bib['cover_img']) {
       	
       	// Fall back on worldcat, we're using phpQuery library so no regex required
-        phpQuery::browserGet('http://ucsf.worldcat.org/oclc/'.$bib['oclc'], array($this, 'get_worldcat_cover_img'));
+//        phpQuery::browserGet('http://ucsf.worldcat.org/oclc/'.$bib['oclc'], array($this, 'get_worldcat_cover_img'));
         // see comment on instance var for explaination
-        $bib['cover_img'] = $this->bibItems['cover_img']; 
+//        $bib['cover_img'] = $this->bibItems['cover_img']; 
       }
     }
 
@@ -270,12 +272,14 @@ class locum_iii_2007 {
    */
   protected function _prepare_marc_single($bib_info_marc, $tags, $subfields, $delimiter = ' ', $first_val = TRUE){
     foreach($tags as $tag){
-      $value = self::prepare_marc_values($bib_info_marc[$tag], $subfields, $delimiter);
-      if($value[0]) {
-        if($first_val) { return $value[0]; }
-        // otherwise, we want the whole array
-        else { return serialize($value); }
-      } // else try the next one
+      if(isset($bib_info_marc[$tag])){
+        $value = self::prepare_marc_values($bib_info_marc[$tag], $subfields, $delimiter);
+        if(count($value)>0) {
+          if($first_val) { return array_shift($value); }
+          // otherwise, we want the whole array
+          else { return serialize($value); }
+        } // else try the next one
+      }
     }
     return '';
   }
@@ -286,17 +290,19 @@ class locum_iii_2007 {
    * @param array $tags MARC codes to aggregate
    * @param array $subfields MARC subfields
    */
-  protected function _prepare_marc_multiple($bib_info_marc, $tags, $subfields, $delimiter = ' ', $serialize=TRUE){
+  protected function _prepare_marc_array($bib_info_marc, $tags, $subfields, $delimiter = ' ', $retain_subfields = FALSE){
     $arr = array();
     foreach ($tags as $tag) {
-      $values = self::prepare_marc_values($bib_info_marc[$tag], $subfields, $delimiter);
-      if (is_array($values)) {
-        foreach ($values as $value) {
-          array_push($arr, $value);
+      if(isset($bib_info_marc[$tag])){
+        $values = self::prepare_marc_values($bib_info_marc[$tag], $subfields, $delimiter, $retain_subfields);
+        if (is_array($values)) {
+          foreach ($values as $key=>$value) {
+            $arr[$key] = $value;
+          }
         }
       }
     }
-    if (count($arr)) { return $serialize? serialize($arr) : $arr; }
+    if (count($arr)) { return serialize($arr); }
     else { return ''; }
   }
 
@@ -307,8 +313,6 @@ class locum_iii_2007 {
    * @return array Returns a Locum-ready availability array
    */
   public function item_status($bnum) {
-    
-    //TODO: Scrape callnumber years (RM671.A1 H35  2009, RM671.A1 H35  2006 )
     
     $iii_server_info = self::iii_server_info();
     $avail_token = locum::csv_parser($this->locum_config['iii_custom_config']['iii_available_token']);
@@ -336,6 +340,12 @@ class locum_iii_2007 {
       $avail_array['on_order'] = $avail_array['on_order'] + (int) trim($order_count[1]);
       $avail_array['orders'][] = $order_txt;
     }
+    
+    // Holdings
+    //TODO: shouldn't be screen-scraping these, they're in the marc.  temporary solution
+    $doc = phpQuery::newDocumentHTML($hold_page_raw);
+    $avail_array['holdings_html'] = $doc->find('table.bibHoldings')->html();
+    
 
     // NOTE:qv not using SOPAC's defalut regex-way of scraping item status, we're using our own method with phpQuery. See revision 10572d3 for original
     $url = $iii_server_info['nosslurl'] . '/search~24/.b' . $bnum . '/.b' . $bnum . '/1,1,1,B/holdings~' . $bnum . '&FF=&1,0,';
@@ -616,11 +626,11 @@ class locum_iii_2007 {
    * @param string $delimiter Delimiter to use for storage and indexing purposes.  A space seems to work fine
    * @return array An array of processed MARC values
    */
-  public function prepare_marc_values($value_arr, $subfields, $delimiter = ' ') {
-
+  public function prepare_marc_values($value_arr, $subfields, $delimiter = ' ', $retain_subfields = FALSE) {
+    $result = array();
     // Repeatable values can be returned as an array or a serialized value
     foreach ($subfields as $subfield) {
-      if (is_array($value_arr[$subfield])) {
+      if (isset($value_arr[$subfield]) && is_array($value_arr[$subfield])) {
 
         foreach ($value_arr[$subfield] as $subkey => $subvalue) {
 
@@ -654,11 +664,19 @@ class locum_iii_2007 {
             if (trim($subvalue)) { $marc_values[$subkey] .= $pad[$subkey] . $sv_tmp; }
             $i[$subkey] = 1;
           }
+          
+          // note: putting it up here because we want $result[$subfield], like array(a=>..., 3=>...), so can work with in tpl.php's
+          if($retain_subfields){
+            $result[$subkey][$subfield] = $sv_tmp;
+          }
         }  
-      }    
+      }
+
+      
+      
     }
 
-    if (is_array($marc_values)) {
+    if (!$retain_subfields && is_array($marc_values)) {
       foreach ($marc_values as $mv) {
         $result[] = $mv;
       }
