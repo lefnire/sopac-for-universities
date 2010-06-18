@@ -215,7 +215,7 @@ class locum_client extends locum {
     }
 
     $cl->SetRankingMode(SPH_RANK_WORDCOUNT);
-    $cl->SetLimits(0, 5000, 5000);
+    $cl->SetLimits(0, 1000, 1000);
     $sph_res_all = $cl->Query($term, $idx); // Grab all the data for the facetizer
     
     // If original match didn't return any results, try a proximity search

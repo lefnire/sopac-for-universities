@@ -3,9 +3,9 @@
 
 // You'll need to change these:
 //$first_record = 1246762; // [journal], Annals of hematology, we want 852 & 866
-$first_record =  1186290; // gut
-//$first_record = 1000000;
-$last_record =  1440836;
+//$first_record =  1186290; // gut
+$first_record = 1000000;
+$last_record =  1443083;
 $large_record_split = 10;
 
 // Init scripts, library locations, and binaries
