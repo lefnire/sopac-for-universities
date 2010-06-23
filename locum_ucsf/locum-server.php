@@ -800,6 +800,7 @@ class locum_server extends locum {
     if ($dbres[0]['links']) {
       $links = explode('|', $dbres[0]['links']);
     } else {
+      $db->query("DELETE FROM locum_syndetics_links WHERE isbn = '$isbn' AND updated < DATE_SUB(NOW(), INTERVAL 2 MONTH)");
       $xmlurl = "http://www.syndetics.com/index.aspx?isbn=$isbn/index.xml&client=$cust_id&type=xw10";
       $xmlraw = file_get_contents($xmlurl);
       if (!preg_match('/error/', $xmlraw)) {

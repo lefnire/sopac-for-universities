@@ -70,7 +70,7 @@ class locum_iii_2007 {
    */
   public function scrape_bib($bnum, $skip_cover = FALSE) {
 
-    $iii_server_info = self::iii_server_info();
+    $iii_server_info = $this->iii_server_info();
 
     $bnum = trim($bnum);
 
@@ -96,14 +96,14 @@ class locum_iii_2007 {
 
     $bib_info_record = $xrecord->RECORDINFO;
     $bib_info_local = $xrecord->TYPEINFO->BIBLIOGRAPHIC->FIXFLD;
-    $bib_info_marc = self::parse_marc_subfields($xrecord->VARFLD);
+    $bib_info_marc = $this->parse_marc_subfields($xrecord->VARFLD);
     unset($xrecord);
 
     // Process record information
     $bib['bnum'] = $bnum;
-    $bib['bib_created'] = self::fixdate($bib_info_record->CREATEDATE);
-    $bib['bib_lastupdate'] = self::fixdate($bib_info_record->LASTUPDATEDATE);
-    $bib['bib_prevupdate'] = self::fixdate($bib_info_record->PREVUPDATEDATE);
+    $bib['bib_created'] = $this->fixdate($bib_info_record->CREATEDATE);
+    $bib['bib_lastupdate'] = $this->fixdate($bib_info_record->LASTUPDATEDATE);
+    $bib['bib_prevupdate'] = $this->fixdate($bib_info_record->PREVUPDATEDATE);
     $bib['bib_revs'] = (int) $bib_info_record->REVISIONS;
 
     // Process local record data
@@ -314,8 +314,8 @@ class locum_iii_2007 {
    */
   public function item_status($bnum) {
     
-    $iii_server_info = self::iii_server_info();
-    $avail_token = locum::csv_parser($this->locum_config['iii_custom_config']['iii_available_token']);
+    $iii_server_info = $this->iii_server_info();
+    $avail_token = locum::csv_parser($this->locum_config['ils_custom_config']['iii_available_token']);
     $default_age = $this->locum_config['iii_custom_config']['default_age'];
     $default_branch = $this->locum_config['iii_custom_config']['default_branch'];
     $loc_codes_flipped = array_flip($this->locum_config['iii_location_codes']);
@@ -447,7 +447,7 @@ class locum_iii_2007 {
    */
   public function patron_info($pid) {
     $papi = new iii_patronapi;
-    $iii_server_info = self::iii_server_info();
+    $iii_server_info = $this->iii_server_info();
     $papi->iiiserver = $iii_server_info['server'];
     $papi_data = $papi->get_patronapi_data($pid);
 
@@ -458,7 +458,7 @@ class locum_iii_2007 {
     $pdata['checkouts'] = $papi_data['CURCHKOUT'];
     $pdata['homelib'] = $papi_data['HOMELIBR'];
     $pdata['balance'] = preg_replace('/[^0-9.]/', '', $papi_data['MONEYOWED']);
-    $pdata['expires'] = $papi_data['EXPDATE'] ? self::date_to_timestamp($papi_data['EXPDATE'], 2000) : NULL;
+    $pdata['expires'] = $papi_data['EXPDATE'] ? $this->date_to_timestamp($papi_data['EXPDATE'], 2000) : NULL;
     $pdata['name'] = $papi_data['PATRNNAME'];
     $pdata['address'] = preg_replace('%\$%s', "\n", $papi_data['ADDRESS']);
     $pdata['tel1'] = $papi_data['TELEPHONE'];
@@ -496,7 +496,7 @@ class locum_iii_2007 {
     foreach ($result as $item) {
       $hist_result[$i]['varname'] = $item['varname'];
       $hist_result[$i]['bnum'] = $item['bnum'];
-      $hist_result[$i]['date'] = self::date_to_timestamp($item['date']);
+      $hist_result[$i]['date'] = $this->date_to_timestamp($item['date']);
       $i++;
     }
     return $hist_result;
@@ -724,7 +724,7 @@ class locum_iii_2007 {
    * @param string Date string in YYYY-MM-DD format
    */
   public function fixdate($olddate) {
-    return date('Y-m-d', self::date_to_timestamp($olddate));
+    return date('Y-m-d', $this->date_to_timestamp($olddate));
   }
   
   /**
@@ -756,7 +756,7 @@ class locum_iii_2007 {
   private function get_tools($cardnum, $pin) {
     require_once('iiitools_2007.php');
     $iii = new iiitools;
-    $iii->set_iiiserver(self::iii_server_info());
+    $iii->set_iiiserver($this->iii_server_info());
     $iii->set_cardnum($cardnum);
     $iii->set_pin($pin);
     return $iii;

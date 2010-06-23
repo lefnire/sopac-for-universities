@@ -625,8 +625,6 @@ class locum_client extends locum {
    * @return array Bib item information
    */
   public function get_bib_item($bnum, $get_inactive = FALSE) {
-    $class = __CLASS__;
-    $function = __FUNCTION__;
     if (is_callable(array(__CLASS__ . '_hook', __FUNCTION__))) {
       eval('$hook = new ' . __CLASS__ . '_hook;');
       return $hook->{__FUNCTION__}($bnum);
@@ -1016,7 +1014,7 @@ class locum_client extends locum {
     
     if ($links) {
       foreach ($links as $link) {
-        $link_result[$valid_hits[$link]] = 'http://www.syndetics.com/index.aspx?isbn=' . $isbn . '/' . $link . '.html&client=' . $cust_id;
+        $link_result[$valid_hits[$link]] = 'http://www.syndetics.com/index.aspx?isbn=' . $isbn . '/' . $link . '.html&amp;client=' . $cust_id;
       }
     }
     $db->disconnect();

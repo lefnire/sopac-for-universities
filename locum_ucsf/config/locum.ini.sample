@@ -2,7 +2,7 @@
 
 ; Basic setup
 [locum_config]
-dsn_file				          = "/usr/local/etc/locum.php"
+dsn_file				          = "/usr/local/etc/scas_dsn.php"
 log_file		        	  	= "/usr/local/var/log/locum.log"
 run_quiet		          		= FALSE
 
@@ -88,8 +88,9 @@ x                         = "Audio Download"
 ; scope a search for, say "books" to material code a, b, and c if a, b, and c
 ; are print/books
 ; in that case, the option would be, books = "a, b, c"
+; For an 'everything' group use ""
 [format_groups]
-everything                = "all"
+everything                = ""
 books                     = "1, 2, a, g"
 movies                    = "4, d"
 music                     = "6"

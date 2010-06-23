@@ -36,7 +36,7 @@ class iii_patronapi {
     if (strlen($id) < $this->bcode_length) {  $id = ".p" . $id; }
     $apiurl = 'http://' . $this->iiiserver . ":4500/PATRONAPI/$id/dump";
 
-    $api_contents = self::get_api_contents($apiurl);
+    $api_contents = $this->get_api_contents($apiurl);
     if (!$api_contents) return FALSE;
 
     $api_array_lines = explode("\n", $api_contents);
@@ -66,7 +66,7 @@ class iii_patronapi {
     if (strlen($id) < $this->bcode_length) { $id = ".p" . $id; }
     $apiurl = 'http://' . $this->iiiserver . ":4500/PATRONAPI/$id/dump";
 
-    $api_contents = self::get_api_contents($apiurl);
+    $api_contents = $this->get_api_contents($apiurl);
 
     $api_array_lines = explode("\n", $api_contents);
     foreach ($api_array_lines as $api_line) {

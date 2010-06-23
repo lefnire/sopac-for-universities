@@ -32,7 +32,7 @@ class iiitools {
    * Initializes the requisite variables and classes.
    */
   public function __construct() {
-    $this->cookie = self::set_cookie_file();
+    $this->cookie = $this->set_cookie_file();
     $this->papi = new iii_patronapi;
     $this->ch = curl_init();
     // Set all the CURL options
@@ -55,7 +55,7 @@ class iiitools {
    * Logs the process out and deletes the cookie file.
    */
   public function __destruct() {
-    self::catalog_logout();
+    $this->catalog_logout();
     if (is_file($this->cookie)) {
       curl_close($this->ch);
       unset($this->ch); 
@@ -70,8 +70,8 @@ class iiitools {
    */
   public function set_cardnum($cardnum) {
     $this->cardnum = $cardnum;
-    self::load_patroninfo($cardnum);
-    self::set_cookie_file($cardnum, NULL);
+    $this->load_patroninfo($cardnum);
+    $this->set_cookie_file($cardnum, NULL);
     curl_setopt ($this->ch, CURLOPT_COOKIEJAR, $this->cookie);
     curl_setopt ($this->ch, CURLOPT_COOKIEFILE, $this->cookie);
     $this->pnum = $this->patroninfo['RECORDNUM'];
@@ -141,7 +141,7 @@ class iiitools {
     if (!$this->pin) { exit('PIN not yet set'); }
     $form_url = "patroninfo/";
     $postvars = 'name=' . $this->patroninfo['PATRNNAME'] . '&code=' . $this->cardnum . '&pin=' . $this->pin;
-    return self::my_curl_exec($form_url, $postvars, NULL, NULL, TRUE);
+    return $this->my_curl_exec($form_url, $postvars, NULL, NULL, TRUE);
     return TRUE;
   }
 
@@ -150,7 +150,7 @@ class iiitools {
    */
   public function catalog_logout() {
     $url = "logout/";
-    return self::my_curl_exec($form_url);
+    return $this->my_curl_exec($form_url);
   }
 
   /**
@@ -165,8 +165,8 @@ class iiitools {
     } else {
       $url_suffix = 'patroninfo~S3/' . $this->pnum . '/items';
     }
-    $result = self::my_curl_exec($url_suffix);
-    return self::parse_patron_items($result['body']);
+    $result = $this->my_curl_exec($url_suffix);
+    return $this->parse_patron_items($result['body']);
   }
 
   /**
@@ -176,8 +176,8 @@ class iiitools {
    */
   public function get_patron_history_items() {
     $url_suffix = 'patroninfo~S3/' . $this->pnum . '/readinghistory';
-    $result = self::my_curl_exec($url_suffix);
-    $result = self::parse_patron_history_items($result['body']);
+    $result = $this->my_curl_exec($url_suffix);
+    $result = $this->parse_patron_history_items($result['body']);
     return $result;
   }
   
@@ -225,7 +225,7 @@ class iiitools {
     }
     else { return FALSE; }
     $url_suffix = 'patroninfo~S3/' . $this->pnum . '/readinghistory/' . $action;
-    $result = self::my_curl_exec($url_suffix);
+    $result = $this->my_curl_exec($url_suffix);
     $success = strpos($result['body'], 'readinghistory/' . $goal) !== FALSE;
     return $success;
   }
@@ -239,7 +239,7 @@ class iiitools {
     if (!count($which)) { return FALSE; }
     $url_suffix = 'patroninfo~S3/' . $this->pnum . '/readinghistory/';
     if ($which[0] == 'all') {
-      $result = self::my_curl_exec($url_suffix . 'rah');
+      $result = $this->my_curl_exec($url_suffix . 'rah');
       $success = strpos($result['body'], 'No Reading History Available' . $goal) !== FALSE;
     }
     // TODO: add handling for individual items
@@ -274,7 +274,7 @@ class iiitools {
         $item[$i]['numrenews'] = 0;
       }
 
-      $item[$i]['duedate'] = self::date_to_timestamp(trim($rawmatch[9][$i]));
+      $item[$i]['duedate'] = $this->date_to_timestamp(trim($rawmatch[9][$i]));
       $item[$i]['callnum'] = trim($rawmatch[11][$i]);
     }
     return $item;
@@ -289,7 +289,7 @@ class iiitools {
   public function get_patron_holds() {
 
     $url_suffix = 'patroninfo/' . $this->pnum . '/holds';
-    $result = self::my_curl_exec($url_suffix);
+    $result = $this->my_curl_exec($url_suffix);
     
     /*
     patFuncMark(.+?)name="(.+?)"(.+?)/patroninfo~S3/(.+?)/item&(.+?)">(.+?)</a>(.+?)patFuncStatus">(.+?)</td>(.+?)patFuncPickup">(.+?)</td>(.+?)patFuncCancel">(.+?)</td>(.+?)patFuncFreeze(.+?)name="(.+?)"(.+?)/></td>
@@ -372,7 +372,7 @@ class iiitools {
     // To make sure the record has been freed.  Otherwise we run in to a race condition.
     usleep(300000);
     
-    $result = self::my_curl_exec($url_suffix, $post);
+    $result = $this->my_curl_exec($url_suffix, $post);
     
     if (preg_match('/Your request for(.*?)was successful/is', $result['body'])) {
       $result['success'] = 1;
@@ -425,7 +425,7 @@ class iiitools {
   public function update_holds($cancelholds = array(), $holdfreezes_to_update, $pickup_locations = array()) {
     $url_suffix = 'patroninfo/' . $this->pnum . '/holds?updateholdssome=TRUE';
 
-    $holds = self::get_patron_holds();
+    $holds = $this->get_patron_holds();
     
     $freeze_arr = array();
     $pickup_arr = array();
@@ -472,7 +472,7 @@ class iiitools {
     
     $url_suffix .= '&' . implode('&', $getvars);
     usleep(300000); // To make sure the record has been freed.
-    $result = self::my_curl_exec($url_suffix);
+    $result = $this->my_curl_exec($url_suffix);
     usleep(300000); // To make sure the changes have taken.
     return $result; // TODO make the return info a little more useful - Handle errors, etc
   }
@@ -491,7 +491,7 @@ class iiitools {
     $cancelations = implode('&', $getvars);
     $url_suffix .= '&' . $cancelations;
     usleep(300000); // To make sure the record has been freed.
-    $result = self::my_curl_exec($url_suffix);
+    $result = $this->my_curl_exec($url_suffix);
     return $result; // TODO make the return info a little more useful - Handle errors, etc
   }
   
@@ -509,7 +509,7 @@ class iiitools {
     $updates = implode('&', $getvars);
     $url_suffix .= '&' . $updates;
     usleep(300000); // To make sure the record has been freed.
-    $result = self::my_curl_exec($url_suffix);
+    $result = $this->my_curl_exec($url_suffix);
     return $result; // TODO make the return info a little more useful - Handle errors, etc
   }
 
@@ -532,8 +532,8 @@ class iiitools {
       $url_suffix = 'patroninfo/' . $this->pnum . '/sorteditems?renewall';
     }
     usleep(300000); // To make sure the record has been freed.
-    $result = self::my_curl_exec($url_suffix);
-    return self::parse_patron_renews($result['body'], $renew_arg);
+    $result = $this->my_curl_exec($url_suffix);
+    return $this->parse_patron_renews($result['body'], $renew_arg);
   
   }
 
@@ -566,7 +566,7 @@ class iiitools {
           $renew_res[$inum]['error'] = ucwords(strtolower(trim($error_match[1])));
         }
         $renew_res[$inum]['varname'] = $varname;
-        $renew_res[$inum]['new_duedate'] = self::date_to_timestamp($rawmatch[2]);
+        $renew_res[$inum]['new_duedate'] = $this->date_to_timestamp($rawmatch[2]);
       }
     // If remewing all items
     } else {
@@ -589,7 +589,7 @@ class iiitools {
           $renew_res[$inum]['varname'] = trim($varnames[$key]);
         }
         foreach ($rawmatch[4] as $key => $due) {
-          $renew_res[$inums[$key]]['new_duedate'] = self::date_to_timestamp($due);
+          $renew_res[$inums[$key]]['new_duedate'] = $this->date_to_timestamp($due);
         }
       } else {
         return FALSE;
@@ -605,8 +605,8 @@ class iiitools {
   */
   function get_patron_fines() {
     $url_suffix = 'webapp/iii/ecom/pay.do?scope=3&ptype=' . $this->patroninfo['PTYPE'] . '&tty=300';
-    $result = self::my_curl_exec($url_suffix);
-    return self::parse_patron_fines($result['body']);
+    $result = $this->my_curl_exec($url_suffix);
+    return $this->parse_patron_fines($result['body']);
   }
 
   /**
@@ -649,7 +649,7 @@ class iiitools {
   */
   function pay_fine($payment_arr) {
     
-    $fines = self::get_patron_fines();
+    $fines = $this->get_patron_fines();
     $sessionkey = $fines['sessionkey'];
     $url_suffix_stage1 = 'webapp/iii/ecom/validatePay.do';
     $url_suffix_stage2 = 'webapp/iii/ecom/submitPay.do';
@@ -665,9 +665,9 @@ class iiitools {
       }
 
     }
-    $result = self::my_curl_exec($url_suffix_stage1, $postvars);
+    $result = $this->my_curl_exec($url_suffix_stage1, $postvars);
     $postvars = 'action=submitData&key=' . $sessionkey;
-    $pay_result = self::my_curl_exec($url_suffix_stage2, $postvars);
+    $pay_result = $this->my_curl_exec($url_suffix_stage2, $postvars);
     usleep(500000); // To make sure the record has been freed.
 
     // may vary depending on how OPAC/ILS is set up (TODO: turn into config setting?)
@@ -738,14 +738,14 @@ class iiitools {
     while (!$body) {
       $body = curl_exec($this->ch);
       if ($no_loop) {
-        return self::parse_response($body); 
+        return $this->parse_response($body); 
       }
       $curl_loop++;
       if ($curl_loop == 10) { 
         return "Unable to contact catalog. ($curl_url) Please try again later.<br/><br/>";
       }
     }
-    return self::parse_response($body);
+    return $this->parse_response($body);
   }
 
   /**

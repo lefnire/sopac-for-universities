@@ -23,13 +23,13 @@ class locum_hook extends locum {
  /**
   * Override class for locum_server
   */
-class locum_server_hook extends locum_server {
+class locum_server_hook extends locum {
   
 }
 
  /**
   * Override class for locum_client
   */
-class locum_client_hook extends locum_client {
-
+class locum_client_hook extends locum {
+  
 }
