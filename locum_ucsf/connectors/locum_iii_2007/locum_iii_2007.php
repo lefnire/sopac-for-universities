@@ -77,6 +77,7 @@ class locum_iii_2007 {
 //    $bnum=1008699; //drugs of choice
 //    $bnum=1330465; // Clinical neuroanatomy
 //    $bnum=1186294; // gut
+//    $bnum=1340003; // Influenza A virus: A role for the RNA polymerase in viral particle assembly
     $xrecord = @simplexml_load_file($iii_server_info['nosslurl'] . '/xrecord=b' . $bnum);
 
     // If there is no record, return false (weeded or non-existent)
