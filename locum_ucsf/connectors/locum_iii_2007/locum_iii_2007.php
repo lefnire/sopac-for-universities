@@ -45,8 +45,8 @@ class locum_iii_2007 {
   public function get_all_marcs($xrecord){
     static $marcs = array();
     static $count=0;
-    if($count++ >= 100){
-//      variable_set('marc_subs', $marcs);
+    if( ($count++ % 500) == 0){ // every so often, store our results (incase it dies)
+      variable_set('marc_subs', $marcs);
     }
     foreach($xrecord->VARFLD as $varfld){
       foreach($varfld->MARCSUBFLD as $subfield){
@@ -341,33 +341,14 @@ class locum_iii_2007 {
       $avail_array['on_order'] = $avail_array['on_order'] + (int) trim($order_count[1]);
       $avail_array['orders'][] = $order_txt;
     }
-    
-    // Holdings
-    //TODO: shouldn't be screen-scraping these, they're in the marc.  temporary solution
-    $doc = phpQuery::newDocumentHTML($hold_page_raw);
-    $avail_array['holdings_html'] = $doc->find('table.bibHoldings')->html();
-    
 
-    // NOTE:qv not using SOPAC's defalut regex-way of scraping item status, we're using our own method with phpQuery. See revision 10572d3 for original
     $url = $iii_server_info['nosslurl'] . '/search~24/.b' . $bnum . '/.b' . $bnum . '/1,1,1,B/holdings~' . $bnum . '&FF=&1,0,';
-    
-    $browser = null;
-    $browserCallback = new CallbackParameterToReference($browser);
-    phpQuery::browserGet($url, $browserCallback);
-    if ($browser) {
-      $rows = $browser
-//      	->WebBrowser($browserCallback) //I don't know what this does, was in the example code
-      	->find('tr.bibItemsEntry');
-      	
-      foreach($rows as $row){
-  		/*<tr  class="bibItemsEntry">
-		<td width="30%" ><!-- field 1 -->&nbsp;<a href="http://www.library.ucsf.edu/locations/parnassus/floorplan/materials">Parnassus: Books - 4th Floor</a> 
-		</td>
-		<td width="45%" ><!-- field C -->&nbsp;<a href="/search~S0?/cRC905+.I5+1967/crc++905+i5+1967/-3,-1,,B/browse">RC905 .I5 1967</a> <!-- field v --><!-- field # --></td>
-		<td width="25%" ><!-- field % -->&nbsp;NOT CHCKD OUT </td></tr>*/
-      	$location = $browser->find('td:eq(0)', $row);
-      	  $location->find('a')->attr('target', '_blank');
-      	  $location = $location->html();
+    $avail_page_raw = utf8_encode(file_get_contents($url));
+
+    /*
+     * $location = $browser->find('td:eq(0)', $row);
+          $location->find('a')->attr('target', '_blank');
+          $location = $location->html();
         $call = $browser->find('td:eq(1)', $row);
           $call->find('a')
             ->attr('target', '_blank')
@@ -375,70 +356,80 @@ class locum_iii_2007 {
           $call = $call->html();
 //          $call = str_replace('href="/', 'href="http://ucsfcat.ucsf.edu/', $call);
         $status = $browser->find('td:eq(2)', $row)->text();
-        
-        
-        // put the item details in the array
-        $location = trim($location);
-        $loc_code = $loc_codes_flipped[$location];
-        $call = str_replace("'", "&apos;", $call);
-        // trim it normally, but also remove &nbsp; (can't remove with trim($x, '&nbsp;') for some reason)
-        $status = trim( trim($status), "\xc2\xa0"); 
-        $age = $default_age;
-        $branch = $default_branch;
-        
-        if (in_array($status, $avail_token)) { 
-          $avail = 1;
+     */
+    
+    /*<tr  class="bibItemsEntry">
+		<td width="30%" ><!-- field 1 -->&nbsp;<a href="http://www.library.ucsf.edu/locations/parnassus/floorplan/materials">Parnassus: Books - 4th Floor</a> 
+		</td>
+		<td width="45%" ><!-- field C -->&nbsp;<a href="/search~S0?/cRC905+.I5+1967/crc++905+i5+1967/-3,-1,,B/browse">RC905 .I5 1967</a> <!-- field v --><!-- field # --></td>
+		<td width="25%" ><!-- field % -->&nbsp;NOT CHCKD OUT </td></tr>*/
+    
+		
+    // Holdings Regex
+//    $regex_h = '|field 1 -->&nbsp;(.*?)</td>(.*?)browse">(.*?)</a>(.*?)field % -->&nbsp;(.*?)</td>|s';
+    $regex_h = '|field 1 -->&nbsp;(.*?)</td>.*?field C -->&nbsp;(.*?)</td>.*?field % -->&nbsp;(.*?)</td>|s';
+    preg_match_all($regex_h, $avail_page_raw, $matches);
+
+    foreach ($matches[1] as $i => $location) {
+      // put the item details in the array
+      $location = trim($location);
+      $loc_code = $loc_codes_flipped[$location];
+      $call = str_replace("'", "&apos;", trim($matches[2][$i]));
+      $status = trim($matches[3][$i]);
+      $age = $default_age;
+      $branch = $default_branch;
+      
+      if (in_array($status, $avail_token)) { 
+        $avail = 1;
+        $due_date = 0;
+      } else { 
+        $avail = 0;
+        if (preg_match('/DUE/i', $status)) {
+          $due_arr = explode(' ', trim($status));
+          $due_date_arr = explode('-', $due_arr[1]);
+          $due_date = mktime(0, 0, 0, $due_date_arr[0], $due_date_arr[1], (2000 + (int) $due_date_arr[2]));
+        } else {
           $due_date = 0;
-        } else { 
-          $avail = 0;
-          if (preg_match('/DUE/i', $status)) {
-            $due_arr = explode(' ', trim($status));
-            $due_date_arr = explode('-', $due_arr[1]);
-            $due_date = mktime(0, 0, 0, $due_date_arr[0], $due_date_arr[1], (2000 + (int) $due_date_arr[2]));
-          } else {
-            $due_date = 0;
-          }
         }
-        
-        // Determine age from location
-        if (count($this->locum_config['iii_record_ages'])) {
-          foreach ($this->locum_config['iii_record_ages'] as $item_age => $match_crit) {
-            if (preg_match('/^\//', $match_crit)) {
-              if (preg_match($match_crit, $loc_code)) { $age = $item_age; }
-            } else {
-              if (in_array($loc_code, locum::csv_parser($match_crit))) { $age = $item_age; }
-            }
-          }
-        }
-        
-        // Determine branch from location
-        if (count($this->locum_config['branch_assignments'])) {
-          foreach ($this->locum_config['branch_assignments'] as $branch_code => $match_crit) {
-            if (preg_match('/^\//', $match_crit)) {
-              if (preg_match($match_crit, $loc_code)) { $branch = $branch_code; }
-            } else {
-              if (in_array($loc_code, locum::csv_parser($match_crit))) { $branch = $branch_code; }
-            }
-          }
-        }
-        
-        $avail_array['items'][] = array(
-          'location' => $location,
-          'loc_code' => $loc_code,
-          'callnum' => $call,
-          'statusmsg' => $status,
-          'due' => $due_date,
-          'avail' => $avail,
-          'age' => $age,
-          'branch' => $branch,
-        );
       }
+      
+      // Determine age from location
+      if (count($this->locum_config['iii_record_ages'])) {
+        foreach ($this->locum_config['iii_record_ages'] as $item_age => $match_crit) {
+          if (preg_match('/^\//', $match_crit)) {
+            if (preg_match($match_crit, $loc_code)) { $age = $item_age; }
+          } else {
+            if (in_array($loc_code, locum::csv_parser($match_crit))) { $age = $item_age; }
+          }
+        }
+      }
+      
+      // Determine branch from location
+      if (count($this->locum_config['branch_assignments'])) {
+        foreach ($this->locum_config['branch_assignments'] as $branch_code => $match_crit) {
+          if (preg_match('/^\//', $match_crit)) {
+            if (preg_match($match_crit, $loc_code)) { $branch = $branch_code; }
+          } else {
+            if (in_array($loc_code, locum::csv_parser($match_crit))) { $branch = $branch_code; }
+          }
+        }
+      }
+      
+      $avail_array['items'][] = array(
+        'location' => $location,
+        'loc_code' => $loc_code,
+        'callnum' => $call,
+        'statusmsg' => $status,
+        'due' => $due_date,
+        'avail' => $avail,
+        'age' => $age,
+        'branch' => $branch,
+      );
     }
     
     return $avail_array;
 
   }
-  
   
   /**
    * Returns an array of patron information
