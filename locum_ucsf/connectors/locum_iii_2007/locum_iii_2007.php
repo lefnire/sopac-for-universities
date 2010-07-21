@@ -316,7 +316,7 @@ class locum_iii_2007 {
   public function item_status($bnum) {
     
     $iii_server_info = $this->iii_server_info();
-    $avail_token = locum::csv_parser($this->locum_config['ils_custom_config']['iii_available_token']);
+    $avail_token = locum::csv_parser($this->locum_config['iii_custom_config']['iii_available_token']);
     $default_age = $this->locum_config['iii_custom_config']['default_age'];
     $default_branch = $this->locum_config['iii_custom_config']['default_branch'];
     $loc_codes_flipped = array_flip($this->locum_config['iii_location_codes']);
@@ -345,19 +345,6 @@ class locum_iii_2007 {
     $url = $iii_server_info['nosslurl'] . '/search~24/.b' . $bnum . '/.b' . $bnum . '/1,1,1,B/holdings~' . $bnum . '&FF=&1,0,';
     $avail_page_raw = utf8_encode(file_get_contents($url));
 
-    /*
-     * $location = $browser->find('td:eq(0)', $row);
-          $location->find('a')->attr('target', '_blank');
-          $location = $location->html();
-        $call = $browser->find('td:eq(1)', $row);
-          $call->find('a')
-            ->attr('target', '_blank')
-            ->attr('href', 'http://ucsfcat.ucsf.edu'.$call->find('a')->attr('href'));
-          $call = $call->html();
-//          $call = str_replace('href="/', 'href="http://ucsfcat.ucsf.edu/', $call);
-        $status = $browser->find('td:eq(2)', $row)->text();
-     */
-    
     /*<tr  class="bibItemsEntry">
 		<td width="30%" ><!-- field 1 -->&nbsp;<a href="http://www.library.ucsf.edu/locations/parnassus/floorplan/materials">Parnassus: Books - 4th Floor</a> 
 		</td>
