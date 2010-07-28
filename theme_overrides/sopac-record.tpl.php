@@ -1,6 +1,22 @@
 <?php
 
 // see https://spreadsheets.google.com/ccc?key=0AtLAcO_9VGLPdGd1Zk9JajdsSGxIZzYzb3VNZ1o0anc&hl=en&pli=1#gid=0
+function print_serial($title, $item){
+  $str = "<li><strong>{$title}</strong>: ";
+  $unserialized = @unserialize($item);
+  if($unserialized!==false) $item=$unserialized;
+  if(is_array($item)){
+    $str.='<ul>';
+    foreach($item as $val){
+      $str.="<li>{$val}</li>";
+    }
+    $str.='</ul>';
+  }else{
+    $str = $item;
+  }        
+  return $str.'</li>';
+}
+
 
 /*
  * Item record display template
@@ -271,6 +287,21 @@ if (sopac_prev_search_url(TRUE)) {
       foreach($note_arr as $note) {
         print '<p>' . $note . '</p>';
       }
+
+      // UCSF Specific
+      if($item['continues'])    { print print_serial('Previous Title', $item['continues']);}
+      if($item['cont_d_by'])    { print print_serial('Superceded By', $item['cont_d_by']); }
+//      if($item['link'])         { print print_serial('Link', $item['link']); }
+      if($item['related_work']) { print print_serial('Related Work', $item['related_work']); }
+      if($item['local_note'])   { print print_serial('Local Notes', $item['local_note']); }
+      if($item['oclc'])         { print print_serial('OCLC', $item['oclc']); }
+      if($item['doc_number'])   { print print_serial('Doc Number', $item['doc_number']); }
+//      if($item['__note__'])     { print print_serial('* NOTE *', $item['__note__']); }
+      if($item['hldgs_stat'])   { 
+        //what is this?
+        print print_serial('Holdings Status', $item['hldgs_stat']); 
+      }
+      
       print '</div>';
     }
     ?>
@@ -292,45 +323,6 @@ if (sopac_prev_search_url(TRUE)) {
     }
     ?>
     
-    <!-- UCSF/University Extras -->
-    <div id="ucsf-extras">
-    <h2>UCSF extra unformatted stuff</h2>
-    <ul>
-    <?php
-      function print_serial($title, $item){
-        $str = "<li><strong>{$title}</strong>: ";
-        $unserialized = @unserialize($item);
-        if($unserialized!==false) $item=$unserialized;
-        if(is_array($item)){
-          $str.='<ul>';
-          foreach($item as $val){
-            $str.="<li>{$val}</li>";
-          }
-          $str.='</ul>';
-        }else{
-          $str = $item;
-        }        
-        return $str.'</li>';
-      }
-      
-      
-      //see node/31
-      if($item['continues'])    { print print_serial('Continues', $item['continues']);}
-//      if($item['link'])         { print print_serial('Link', $item['link']); }
-      if($item['related_work']) { print print_serial('Related Work', $item['related_work']); }
-      if($item['local_note'])   { print print_serial('Local Notes', $item['local_note']); }
-      if($item['oclc'])         { print print_serial('OCLC', $item['oclc']); }
-      if($item['doc_number'])   { print print_serial('Doc Number', $item['doc_number']); }
-      if($item['cont_d_by'])    { print print_serial('Continued By', $item['cont_d_by']); }
-//      if($item['__note__'])     { print print_serial('* NOTE *', $item['__note__']); }
-      if($item['hldgs_stat'])   { 
-        //what is this?
-        print print_serial('Holdings Status', $item['hldgs_stat']); 
-      }
-    ?>
-    </ul>
-    </div>
-
     <!-- Syndetics / Review Links -->
     <?php
     if ($item['review_links']) {
