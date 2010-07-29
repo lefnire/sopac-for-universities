@@ -1,23 +1,4 @@
 <?php
-
-// see https://spreadsheets.google.com/ccc?key=0AtLAcO_9VGLPdGd1Zk9JajdsSGxIZzYzb3VNZ1o0anc&hl=en&pli=1#gid=0
-function print_serial($title, $item){
-  $str = "<li><strong>{$title}</strong>: ";
-  $unserialized = @unserialize($item);
-  if($unserialized!==false) $item=$unserialized;
-  if(is_array($item)){
-    $str.='<ul>';
-    foreach($item as $val){
-      $str.="<li>{$val}</li>";
-    }
-    $str.='</ul>';
-  }else{
-    $str = $item;
-  }        
-  return $str.'</li>';
-}
-
-
 /*
  * Item record display template
  */
@@ -289,18 +270,14 @@ if (sopac_prev_search_url(TRUE)) {
       }
 
       // UCSF Specific
-      if($item['continues'])    { print print_serial('Previous Title', $item['continues']);}
-      if($item['cont_d_by'])    { print print_serial('Superceded By', $item['cont_d_by']); }
-//      if($item['link'])         { print print_serial('Link', $item['link']); }
-      if($item['related_work']) { print print_serial('Related Work', $item['related_work']); }
-      if($item['local_note'])   { print print_serial('Local Notes', $item['local_note']); }
-      if($item['oclc'])         { print print_serial('OCLC', $item['oclc']); }
-      if($item['doc_number'])   { print print_serial('Doc Number', $item['doc_number']); }
-//      if($item['__note__'])     { print print_serial('* NOTE *', $item['__note__']); }
-      if($item['hldgs_stat'])   { 
-        //what is this?
-        print print_serial('Holdings Status', $item['hldgs_stat']); 
-      }
+      // see https://spreadsheets.google.com/ccc?key=0AtLAcO_9VGLPdGd1Zk9JajdsSGxIZzYzb3VNZ1o0anc&hl=en&pli=1#gid=0
+      if($item['continues'])    { print "<strong>Previous Title</strong>: {$item['continues']}";}
+      if($item['cont_d_by'])    { print "<strong>Superceded By</strong>: {$item['cont_d_by']}";}
+      if($item['related_work']) { print "<strong>Related Work</strong>: {$item['related_work']}";}
+      if($item['local_note'])   { print "<strong>Local Notes</strong>: {$item['local_note']}";}
+      if($item['oclc'])         { print "<strong>OCLC</strong>: {$item['oclc']}";}
+      if($item['doc_number'])   { print "<strong>Doc Number</strong>: {$item['doc_number']}";}
+      if($item['hldgs_stat'])   { print "<strong>Holdings Status: {$item['hldgs_stat']}";}
       
       print '</div>';
     }
