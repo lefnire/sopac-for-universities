@@ -341,6 +341,11 @@ class locum_iii_2007 {
       $avail_array['on_order'] = $avail_array['on_order'] + (int) trim($order_count[1]);
       $avail_array['orders'][] = $order_txt;
     }
+    
+    // Holdings
+    //TODO: shouldn't be screen-scraping these, they're in the marc.  temporary solution
+    $doc = phpQuery::newDocumentHTML($hold_page_raw);
+    $avail_array['holdings_html'] = $doc->find('table.bibHoldings')->html();
 
     $url = $iii_server_info['nosslurl'] . '/search~24/.b' . $bnum . '/.b' . $bnum . '/1,1,1,B/holdings~' . $bnum . '&FF=&1,0,';
     $avail_page_raw = utf8_encode(file_get_contents($url));
