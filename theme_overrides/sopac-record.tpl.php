@@ -217,10 +217,11 @@ if (sopac_prev_search_url(TRUE)) {
     <div class="item-avail-disp">
       <h2>Where To Find It</h2>
       <?php
-      if ($item_status['callnums']) {
-        print '<p>Call number: <strong>' . $item['callnum'] . '</strong></p>';
-//        print '<p>Call number: <strong>' . implode(", ", $item_status['callnums']) . '</strong></p>';
-      }
+      // http://vmubuntu02.ckm.ucsf.edu/library/node/105, I think we'll want it back
+      /* if ($item_status['callnums']) {
+        print '<p>Call number: <strong>' . $item['callnum'] . '</strong></p>'; 
+        // print '<p>Call number: <strong>' . implode(", ", $item_status['callnums']) . '</strong></p>';
+      }*/
 
       if ( (count($item_status['items']) && !$no_avail_mat_codes) || $item['download_link'] || $item['holdings'] ){
       if (count($item_status['items']) && !$no_avail_mat_codes) {

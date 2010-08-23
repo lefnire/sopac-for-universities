@@ -93,7 +93,7 @@ class locum_iii_2007 {
     }
     
     //TODO: delete me
-    $this->get_all_marcs($xrecord);
+    //    $this->get_all_marcs($xrecord);
 
     $bib_info_record = $xrecord->RECORDINFO;
     $bib_info_local = $xrecord->TYPEINFO->BIBLIOGRAPHIC->FIXFLD;
