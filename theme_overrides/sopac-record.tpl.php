@@ -61,7 +61,8 @@ if (count($item_status['items'])) {
 }
 
 if (sopac_prev_search_url(TRUE)) {
-  print '<p>' . l("&#171; Return to your search", sopac_prev_search_url(), array('html' => TRUE)) . '</p>';
+  // changed because original version doesn't support absolute URL
+  print '<p><a href="'.sopac_prev_search_url().'">&#171; Return to your search</a></p>';
 }
 
 ?>
