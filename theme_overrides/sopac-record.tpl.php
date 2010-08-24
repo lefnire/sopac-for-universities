@@ -240,7 +240,7 @@ if (sopac_prev_search_url(TRUE)) {
 //        print '<div class="item-request">';
 //        print '<p>' . l(t('Download this Title'), $item['download_link'], array('attributes' => array('target' => '_new'))) . '</p>';
 //        print '</div>';
-          print "<h3>Download this Title</h3>";
+          print "<h3>Available Online</h3>";
           print $item['download_link'];
       }
       
