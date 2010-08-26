@@ -294,7 +294,8 @@ if (sopac_prev_search_url(TRUE)) {
       if (is_array($alt_titles)) {
         foreach ($alt_titles as $alt_title) {
           $alt_title_url = '/' . $url_prefix . '/search/title/%22' . urlencode($alt_title) . '%22';
-          print '<li><a href="' . $alt_title_url. '">' . $alt_title . '</a></li>';
+//          print '<li><a href="' . $alt_title_url. '">' . $alt_title . '</a></li>';
+          print "<li>$alt_title</li>";
         }
       }
       print '</ul></p>';
