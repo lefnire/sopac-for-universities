@@ -190,10 +190,12 @@ if (sopac_prev_search_url(TRUE)) {
     </h1>
 
     <!-- Item Format Icon -->
+    <!-- 
     <ul class="item-format-icon">
       <li><img src="<?php print '/' . drupal_get_path('module', 'sopac') . '/images/' . $item['mat_code'] . '.gif' ?>"></li>
       <li style="margin-top: -2px;"><?php print wordwrap($locum_config['formats'][$item['mat_code']], 8, '<br />'); ?></li>
     </ul>
+     -->
 
     <!-- Item Author -->
     <?php
